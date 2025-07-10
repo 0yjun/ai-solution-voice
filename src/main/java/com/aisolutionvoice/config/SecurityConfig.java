@@ -23,7 +23,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth->
                         auth
                                 //.requestMatchers(PathRequest.toH2Console()).permitAll()
-                                .requestMatchers("/","/auth/login", "/auth/logout").permitAll()
+                                .requestMatchers(
+                                        "/api/auth/signup", "/api/auth/login",
+                                        "/api/auth/logout", "/api/auth/me")
+                                .permitAll()
                                 .anyRequest().authenticated()
                 );
 
@@ -34,7 +37,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOriginPatterns(List.of("http://localhost:3000")); // ← 오타 수정
+        config.setAllowedOriginPatterns(List.of("http://localhost:3000"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         config.setAllowedHeaders(List.of("*"));
 
