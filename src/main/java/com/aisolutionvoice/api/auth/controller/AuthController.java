@@ -2,6 +2,7 @@ package com.aisolutionvoice.api.auth.controller;
 
 import com.aisolutionvoice.api.auth.dto.LoginRequestDto;
 import com.aisolutionvoice.api.auth.dto.SignupRequestDto;
+import com.aisolutionvoice.api.auth.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,12 +23,12 @@ import java.util.Map;
 @Tag(name = "Auth", description = "인증 및 사용자 관리 API")
 @Slf4j
 public class AuthController {
+    private final AuthService authService;
     @PostMapping("/signup")
     @Operation(summary = "회원 등록", description = "새로운 관리자를 등록합니다.")
     public ResponseEntity<Object> createMember(@RequestBody @Valid SignupRequestDto request) {
-        Object data = new Object();
-
-        return ResponseEntity.ok(request);
+        authService.signUp(request);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/login")

@@ -10,6 +10,10 @@ import java.util.Optional;
 
 @Repository
 public interface TermsRepository extends JpaRepository<Terms, Long> {
+
+    // 동의가 필요한 모든 약관 조회
+    List<Terms> findByIsRequiredTrue();
+    
     // 특정 약관 타입의 최신 버전 조회 (버전이 unique한 경우)
     Optional<Terms> findTopByTypeOrderByCreatedAtDesc(TermsType type);
 

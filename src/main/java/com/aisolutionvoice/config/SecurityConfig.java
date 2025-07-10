@@ -20,15 +20,16 @@ public class SecurityConfig {
         http.csrf(csrf->csrf.disable())
                 .formLogin(form->form.disable())
                 .cors(Customizer.withDefaults())
-                .authorizeHttpRequests(auth->
-                        auth
-                                //.requestMatchers(PathRequest.toH2Console()).permitAll()
-                                .requestMatchers(
-                                        "/api/auth/signup", "/api/auth/login",
-                                        "/api/auth/logout", "/api/auth/me")
-                                .permitAll()
-                                .anyRequest().authenticated()
-                );
+//                .authorizeHttpRequests(auth->
+//                        auth
+//                                //.requestMatchers(PathRequest.toH2Console()).permitAll()
+//                                .requestMatchers(
+//                                        "/api/auth/signup", "/api/auth/login",
+//                                        "/api/auth/logout", "/api/auth/me")
+//                                .permitAll()
+//                                .anyRequest().authenticated()
+//                )
+        ;
 
         return http.build();
     }
