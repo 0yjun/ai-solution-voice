@@ -19,7 +19,7 @@ public class AuthService {
     private final TermsService termsService;
     @Transactional
     public void signUp(SignupRequestDto request) {
-        // 1. 필수 약관 목록 조회
+        // 1. 필수 약관 확인
         termsService.validateRequiredTermsAgreed(request.getAgreedTerms());
 
         // 3. 사용자 저장 (생략 가능)

@@ -23,6 +23,8 @@ public class Terms {
     private TermsType type;
 
     private String title;
+
+    @Column(columnDefinition = "TEXT")
     private String content;
     private String version;
     private boolean isRequired;

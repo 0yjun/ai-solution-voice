@@ -15,7 +15,7 @@ import lombok.Setter;
 public class LoginRequestDto {
         @Schema(description = "로그인 ID", example = "admin1")
         @NotBlank
-        private String nickname;
+        private String loginId;
 
         @Schema(description = "비밀번호", example = "securePass123!")
         @NotBlank

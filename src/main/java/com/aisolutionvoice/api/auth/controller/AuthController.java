@@ -35,7 +35,7 @@ public class AuthController {
     @Operation(summary = "로그인", description = "로그인.")
     public ResponseEntity<Object> createMember(HttpServletRequest request, @RequestBody @Valid LoginRequestDto dto) {
         HttpSession session = request.getSession();
-        session.setAttribute(dto.getNickname(), dto);
+        session.setAttribute(dto.getLoginId(), dto);
         return ResponseEntity.ok(session.toString());
     }
 
