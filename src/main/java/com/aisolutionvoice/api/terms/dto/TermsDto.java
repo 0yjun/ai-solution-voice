@@ -18,7 +18,7 @@ public class TermsDto {
     private boolean isRequired;
 
     public TermsDto(Terms terms) {
-        this.id = terms.getId();
+        this.id = terms.getTermId();
         this.type = terms.getType();
         this.title = terms.getTitle();
         this.content = terms.getContent();

@@ -1,6 +1,8 @@
 package com.aisolutionvoice.api.auth.service;
 
 import com.aisolutionvoice.api.auth.dto.SignupRequestDto;
+import com.aisolutionvoice.api.member.entity.Member;
+import com.aisolutionvoice.api.member.service.MemberService;
 import com.aisolutionvoice.api.terms.dto.AgreedTermDto;
 import com.aisolutionvoice.api.terms.entity.Terms;
 import com.aisolutionvoice.api.terms.repository.TermsRepository;
@@ -17,21 +19,17 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AuthService {
     private final TermsService termsService;
+    private final MemberService memberService;
     @Transactional
     public void signUp(SignupRequestDto request) {
         // 1. 필수 약관 확인
         termsService.validateRequiredTermsAgreed(request.getAgreedTerms());
 
-        // 3. 사용자 저장 (생략 가능)
-//        User user = new User();
-//        user.setNickname(request.getNickname());
-//        user.setPassword(passwordEncoder.encode(request.getPassword()));
-//        userRepository.save(user);
-//
-//        // 4. 동의 내역 저장
-//        for (AgreedTermDto agreed : request.getAgreedTerms()) {
-//            userTermsRepository.save(new UserTerms(user, agreed.getTermId(), agreed.getAgreed()));
-//        }
+        // 2. 회원 저장
+        Member member = memberService.createMember(request);
+
+        // 3. 약관저장
+        termsService.assignTermsToMember(member, request.getAgreedTerms());
     }
 
 }

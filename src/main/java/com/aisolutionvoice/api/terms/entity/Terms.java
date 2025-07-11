@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class Terms {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long termId;
 
     @Enumerated(EnumType.STRING)
     private TermsType type;
