@@ -1,6 +1,9 @@
 spring:
   application:
     name: ai-solution-voice
+  servlet:
+    session:
+      timeout: 60m  # 60분
   sql:
     init:
       mode: always

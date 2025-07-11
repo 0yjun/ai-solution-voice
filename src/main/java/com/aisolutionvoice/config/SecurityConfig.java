@@ -1,11 +1,17 @@
 package com.aisolutionvoice.config;
 
+import com.aisolutionvoice.api.auth.service.MemberDetailsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -16,24 +22,31 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
+    private final MemberDetailsService memberDetailsService;
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws  Exception{
-        http.csrf(csrf->csrf.disable())
-                .formLogin(form->form.disable())
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http
+                .csrf(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
-//                .authorizeHttpRequests(auth->
-//                        auth
-//                                //.requestMatchers(PathRequest.toH2Console()).permitAll()
-//                                .requestMatchers(
-//                                        "/api/auth/signup", "/api/auth/login",
-//                                        "/api/auth/logout", "/api/auth/me")
-//                                .permitAll()
-//                                .anyRequest().authenticated()
-//                )
-        ;
-
-        return http.build();
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/api/auth/signup", "/api/auth/login","/api/auth/me",
+                                "/api/auth/logout", "/api/terms/applied"
+                        ).permitAll()
+                        .requestMatchers(PathRequest.toH2Console())
+                        .permitAll()
+                        //.requestMatchers("/api/auth/me")
+                        //.hasRole("USER")
+                        .anyRequest().authenticated()
+                )
+                .userDetailsService(memberDetailsService)
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                )
+                .build();
     }
 
     @Bean
@@ -52,5 +65,10 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
 }
