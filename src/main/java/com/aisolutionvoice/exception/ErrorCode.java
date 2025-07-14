@@ -9,8 +9,6 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 
     // JWT 관련
-    JWT_EXPIRED(HttpStatus.UNAUTHORIZED,"", "토큰이 만료되었습니다."),
-    JWT_INVALID(HttpStatus.UNAUTHORIZED,"JWT002", "유효하지 않은 토큰입니다."),
 
     // 사용자 관련
     USER_NOT_FOUND(HttpStatus.UNAUTHORIZED,"USR001", "비밀번호 혹은 아이디가 일치하지 않습니다"),
