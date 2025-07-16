@@ -14,7 +14,7 @@ public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer userId;
+    private Integer memberId;
 
     @Column(nullable = false, unique = true, length = 50)
     private String loginId;
