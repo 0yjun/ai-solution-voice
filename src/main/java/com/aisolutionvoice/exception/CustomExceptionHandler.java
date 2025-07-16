@@ -3,7 +3,10 @@ package com.aisolutionvoice.exception;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -34,19 +37,11 @@ public class CustomExceptionHandler {
                 .body(new ErrorResponse(originalErrorCode.getCode(), originalErrorCode.getMessage())
                 );
     }
-
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<ErrorResponse> userNotFoundException(Exception ex) {
-        log.warn(ex.getMessage());
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(DataIntegrityViolationException e) {
+        ErrorResponse response = new ErrorResponse("DUPLICATE_RESOURCE", "이미 등록된 정보입니다.");
         return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(new ErrorResponse(ErrorCode.USER_NOT_FOUND.getCode(), ErrorCode.USER_NOT_FOUND.getMessage()));
-    }
-
-    @Getter
-    @AllArgsConstructor
-    public static class ErrorResponse {
-        private final String code;
-        private final String message;
+                .status(HttpStatus.CONFLICT)
+                .body(new ErrorResponse(ErrorCode.INTERNAL_COMMON_ERROR));
     }
 }

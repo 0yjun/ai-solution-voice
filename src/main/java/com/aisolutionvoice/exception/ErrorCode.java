@@ -8,11 +8,11 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum ErrorCode {
 
-    // JWT 관련
-
+    // 권한 관련
+    AUTH_NOT_AUTHENTICATED(HttpStatus.UNAUTHORIZED, "AUTH001", "로그인이 필요합니다."),
     // 사용자 관련
     USER_NOT_FOUND(HttpStatus.UNAUTHORIZED,"USR001", "비밀번호 혹은 아이디가 일치하지 않습니다"),
-    DUPLICATE_USERNAME(HttpStatus.UNAUTHORIZED,"USR002", "이미 존재하는 아이디입니다."),
+    DUPLICATE_USERNAME(HttpStatus.CONFLICT,"USR002", "이미 존재하는 아이디입니다."),
 
     // 권한 관련
     AUTH_COMMON_ERROR(HttpStatus.FORBIDDEN,"AUTH_000", "권한이 없습니다."),
@@ -21,8 +21,9 @@ public enum ErrorCode {
     UNKNOWN_ROLE(HttpStatus.UNAUTHORIZED,      "AUTH_004", "정의되지 않은 권한입니다."),
 
     // 파라미터 관련
-    VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "VLD001", "%s 필드 오류: %s");
-
+    VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "VLD001", "%s 필드 오류: %s"),
+    // 서버오류
+    INTERNAL_COMMON_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMN001","서버 내부 오류");
     private final HttpStatus httpStatus;
     private final String     code;
     private final String     message;

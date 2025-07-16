@@ -4,9 +4,12 @@ import com.aisolutionvoice.api.Role.domain.Role;
 import com.aisolutionvoice.api.auth.dto.SignupRequestDto;
 import com.aisolutionvoice.api.member.entity.Member;
 import com.aisolutionvoice.api.member.repository.MemberRepository;
+import com.aisolutionvoice.exception.CustomException;
+import com.aisolutionvoice.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -14,7 +17,12 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional
     public Member createMember(SignupRequestDto dto) {
+        if(memberRepository.existsByLoginId(dto.getLoginId())){
+            throw new CustomException(ErrorCode.DUPLICATE_USERNAME);
+        }
+
         String encodedPassword = passwordEncoder.encode(dto.getPassword());
 
         Member member = Member.builder()
