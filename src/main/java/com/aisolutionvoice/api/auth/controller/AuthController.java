@@ -61,7 +61,6 @@ public class AuthController {
         securityContextRepository.saveContext(context, request, response);
 
         UserDetails userDetails = (UserDetails) auth.getPrincipal();
-        System.out.println(userDetails);
 
         return ResponseEntity.ok(userDetails);
     }

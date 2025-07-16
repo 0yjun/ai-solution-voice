@@ -18,3 +18,25 @@ values
     ('DashBoard', 'DashBoard','/',1,'mdi-view-dashboard','USER',true, null),
 
     ('호출어등록화면', '호출어등록화면','/board',3,'mdi-lan-connect','USER',true, null);
+
+-- 게시글
+insert into BOARD(ID, NAME, DESCRIPTION, DELETED  )
+values (1, '호출어입력게시판','호출어입력게시판설명', false);
+
+-- 호출어 스크립트
+INSERT INTO hotword_script (text)
+VALUES
+    ('마루야 불 꺼줘'),
+    ('헤이 마루, 음악 틀어줘'),
+    ('마루야 창문 열어'),
+    ('시리야 날씨 알려줘'),
+    ('마루야 다음 곡 재생');
+
+-- 호출어 게시판 매핑
+INSERT INTO board_script_mapping (board_id, hotword_script_id, display_order)
+VALUES
+    (1, 1, 1),
+    (1, 2, 2),
+    (1, 3, 3),
+    (1, 4, 4),
+    (1, 5, 5);

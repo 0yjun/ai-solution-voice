@@ -22,7 +22,7 @@ public class Board {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Board_id;
+    private Long id;
 
     // 게시판 이름 (ex. "차량 호출어 수집")
     @Column(nullable = false)
@@ -46,6 +46,7 @@ public class Board {
     private LocalDateTime updatedAt;
 
     // Soft delete (선택)
+    @Column(nullable = false)
     private boolean deleted = false;
 
     //== 연관관계 편의 메서드 ==//
