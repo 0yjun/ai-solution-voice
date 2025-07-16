@@ -83,7 +83,7 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<?> getMe(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
-            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+            throw new CustomException(ErrorCode.AUTH_NOT_AUTHENTICATED);
         }
 
         // authentication.getPrincipal()은 UserDetails를 반환

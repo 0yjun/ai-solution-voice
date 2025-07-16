@@ -10,6 +10,7 @@ public enum ErrorCode {
 
     // 권한 관련
     AUTH_NOT_AUTHENTICATED(HttpStatus.UNAUTHORIZED, "AUTH001", "로그인이 필요합니다."),
+    AUTH_ACCESS_FORBIDDEN(HttpStatus.FORBIDDEN, "AUTH002", "접근할 권한이 없습니다."),
     // 사용자 관련
     USER_NOT_FOUND(HttpStatus.UNAUTHORIZED,"USR001", "비밀번호 혹은 아이디가 일치하지 않습니다"),
     DUPLICATE_USERNAME(HttpStatus.CONFLICT,"USR002", "이미 존재하는 아이디입니다."),

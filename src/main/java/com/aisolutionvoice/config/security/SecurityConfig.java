@@ -35,8 +35,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final MemberDetailsService memberDetailsService;
+    // 권한이 없을때 처리로직을 구현한 컴포넌트
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
-    private final ObjectMapper objectMapper;
+    // 403 에러를 처리할 컴포넌트
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
@@ -54,18 +57,10 @@ public class SecurityConfig {
                         //.hasRole("USER")
                         .anyRequest().authenticated()
                 )
-                // 권한이 없을경우 403 -> 401 변환
+                // 인증이 필요한 API에 인증 없이 접근했을 때, 기본 동작(로그인 페이지 리다이렉트 등) 대신 커스텀 401 JSON 응답을 제공
                 .exceptionHandling(exception->exception
-                        .authenticationEntryPoint((request, response, authException)->{
-                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                            response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-                            response.getWriter().write(
-                                    objectMapper.writeValueAsString(
-                                            new ErrorResponse(ErrorCode.AUTH_NOT_AUTHENTICATED)
-                                    )
-                            );
-                        })
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+                        .accessDeniedHandler(customAccessDeniedHandler)
                 )
                 .userDetailsService(memberDetailsService)
                 .sessionManagement(session ->
