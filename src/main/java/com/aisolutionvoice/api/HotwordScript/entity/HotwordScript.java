@@ -19,7 +19,4 @@ public class HotwordScript {
 
     @Column(nullable = false)
     private String text;
-
-    @CreationTimestamp
-    private LocalDateTime createdAt;
 }

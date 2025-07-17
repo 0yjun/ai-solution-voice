@@ -17,6 +17,7 @@ import java.util.List;
 @Table(name = "board")
 @RequiredArgsConstructor
 @AllArgsConstructor
+@Getter
 @Builder
 public class Board {
 
