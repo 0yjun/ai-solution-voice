@@ -4,6 +4,8 @@ spring:
   servlet:
     session:
       timeout: 60m  # 60분
+    multipart:
+      enabled: true
   sql:
     init:
       mode: always
@@ -29,3 +31,7 @@ spring:
   h2:
     console:
       enabled: true
+
+file:
+  storage:
+    base-path: C:\project2\ai-solution-voice

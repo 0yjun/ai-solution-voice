@@ -63,6 +63,9 @@ public class Post {
     }
     //== 비즈니스 로직 ==//
     public void addVoiceData(VoiceData data) {
+        if (this.voiceDataList == null) {
+            this.voiceDataList = new ArrayList<>();
+        }
         voiceDataList.add(data);
         data.setPost(this);
     }

@@ -5,6 +5,7 @@ import com.aisolutionvoice.api.Board.entity.Board;
 import com.aisolutionvoice.api.Board.repository.BoardRepository;
 import com.aisolutionvoice.api.HotwordScript.dto.HotwordScriptDto;
 import com.aisolutionvoice.api.HotwordScript.entity.HotwordScript;
+import com.aisolutionvoice.api.member.entity.Member;
 import com.aisolutionvoice.exception.CustomException;
 import com.aisolutionvoice.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -21,12 +22,18 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final ModelMapper modelMapper;
 
+
+    public Board getBoardByProxy(Integer boardId){
+        return boardRepository.getReferenceById(boardId);
+    }
+
     @Transactional(readOnly = true)
     public BoardFormDto getBoardForm(Long boardId) {
         Board board = boardRepository.findBoardById(boardId)
                 .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_COMMON_ERROR));
 
         List<HotwordScriptDto> scripts = board.getScripts().stream()
+                .filter(script -> script.getScriptId()==1)
                 .map(script ->
                     modelMapper.map(script, HotwordScriptDto.class)
                 )

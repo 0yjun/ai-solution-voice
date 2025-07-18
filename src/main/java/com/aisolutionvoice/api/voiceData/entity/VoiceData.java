@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@RequiredArgsConstructor
 @Builder
 public class VoiceData {
 

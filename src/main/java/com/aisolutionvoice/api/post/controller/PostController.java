@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -32,13 +34,19 @@ public class PostController {
         return ResponseEntity.ok(postSummaryDtoPage);
     }
 
-    @PostMapping
+    @PostMapping( consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadPostWithVoice(
-            @RequestPart("requestDto") @Validated PostCreateDto dto,
+            @RequestPart("postCreateDto") @Validated PostCreateDto dto,
             @RequestParam Map<String, MultipartFile> files,
             @AuthenticationPrincipal CustomMemberDetails customMemberDetails
     ) {
-        postService.createPostWithVoiceFiles(...);
-        return ResponseEntity.ok("성공");
+        Integer memberId = customMemberDetails.getUserId();
+        try{
+            postService.createPostWithVoiceFiles(dto, files, memberId);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok(Map.of("data","ok"));
     }
 }

@@ -23,6 +23,10 @@ public enum ErrorCode {
 
     // 파라미터 관련
     VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "VLD001", "%s 필드 오류: %s"),
+
+    //파일처리관련 오류
+    FILE_EMPTY_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "FILE001","저장할 파일이 비어있습니다"),
+    FILE_SAVE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "FILE001","저장할 파일이 비어있습니다"),
     // 서버오류
     INTERNAL_COMMON_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMN001","서버 내부 오류");
     private final HttpStatus httpStatus;

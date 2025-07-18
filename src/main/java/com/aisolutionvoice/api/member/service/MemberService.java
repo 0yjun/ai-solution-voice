@@ -19,6 +19,10 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
+    public Member getMemberProxy(Integer memberId){
+        return memberRepository.getReferenceById(memberId);
+    }
+
     public Member getMemberByLoginId(String loginId){
         return memberRepository.findByLoginId(loginId).orElse(null);
     }
