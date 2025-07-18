@@ -50,17 +50,19 @@ public class Post {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    public static Post create(Member member, Board board, String title) {
+    public static Post create(Member member, Board board, String memo) {
         return Post.builder()
                 .member(member)
                 .board(board)
-                .title(title)
+                .memo(memo)
                 .build();
     }
 
     public void setBoard(Board board){
         this.board = board;
     }
+
+    public  void setMemo(String memo){ this.memo = memo;}
     //== 비즈니스 로직 ==//
     public void addVoiceData(VoiceData data) {
         if (this.voiceDataList == null) {

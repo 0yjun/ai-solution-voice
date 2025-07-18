@@ -6,12 +6,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.util.StringUtils;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Schema(description = "게시글 목록 제공 DTO")
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class PostSummaryDto {
     @Schema(description = "로그인 ID", example = "admin1")
     @NotBlank
@@ -24,4 +27,23 @@ public class PostSummaryDto {
     @Schema(description = "작성자 로그인아이디 ", example = "securePass123!")
     @NotBlank
     private String writerLoginId;
+
+    @Schema(description = "작성일자 ", example = "2025-01-01")
+    @NotBlank
+    private String createAt;
+
+    // JPQL 프로젝션을 위한 생성자
+    public PostSummaryDto(Long postId, String title, String loginId, LocalDateTime createAt) {
+        this.postId = postId;
+        this.title = title;
+        this.writerLoginId = loginId;
+        this.createAt = createAt.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+    }
+
+    public PostSummaryDto applyDefaultTitle() {
+        if (!StringUtils.hasText(this.title)) {
+            this.title = this.writerLoginId + "님이 작성한 게시글";
+        }
+        return this;
+    }
 }

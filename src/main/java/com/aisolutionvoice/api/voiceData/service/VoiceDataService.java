@@ -34,7 +34,7 @@ public class VoiceDataService {
         for (Map.Entry<String, MultipartFile> entry : files.entrySet()) {
             if (!entry.getKey().startsWith(VOICE_PREFIX)) continue;
 
-            Long scriptId = Long.valueOf(entry.getKey().substring("voice_".length()));
+            Long scriptId = Long.valueOf(entry.getKey().substring(VOICE_PREFIX.length()));
             HotwordScript script = hotwordScriptService.getScriptByProxy(scriptId);
 
             String relativePath =

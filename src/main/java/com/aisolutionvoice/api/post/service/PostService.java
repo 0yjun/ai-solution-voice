@@ -21,10 +21,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -38,8 +40,8 @@ public class PostService {
 
 
     public Page<PostSummaryDto> getByBoardId(Long boardId, Pageable pageable){
-        return postRepository.findByBoardId(boardId, pageable)
-                .map(post->modelMapper.map(post, PostSummaryDto.class));
+        return postRepository.findSummaryByBoardId(boardId, pageable)
+                .map(PostSummaryDto::applyDefaultTitle);
     }
 
     @Transactional
@@ -57,11 +59,16 @@ public class PostService {
     private Post savePost(PostCreateDto dto, Integer memberId) {
         Member member = memberService.getMemberProxy(memberId);
         Board board = boardService.getBoardByProxy(1);
-        Post post = Post.builder()
-                .memo(dto.getMemo())
-                .board(board)
-                .member(member)
-                .build();
-        return postRepository.save(post);
+
+        Optional<Post> optionalPost = postRepository.findByMemberAndBoard(member, board);
+
+        if (optionalPost.isPresent()) {
+            Post existingPost = optionalPost.get();
+            existingPost.setMemo(dto.getMemo());
+            return postRepository.save(existingPost);
+        } else {
+            Post newPost = Post.create(member,board, dto.getMemo());
+            return postRepository.save(newPost);
+        }
     }
 }
