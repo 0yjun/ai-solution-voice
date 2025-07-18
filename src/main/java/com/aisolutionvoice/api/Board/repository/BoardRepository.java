@@ -12,11 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Integer> {
-    @Query("""
-        SELECT b FROM Board b
-        LEFT JOIN FETCH b.scriptMappings m
-        LEFT JOIN FETCH m.hotwordScript
-        WHERE b.id = :boardId
-    """)
-    Optional<Board> findByIdWithScripts(@Param("boardId") Long boardId);
+
+
+    Optional<Board> findBoardById(@Param("boardId") Long boardId);
 }

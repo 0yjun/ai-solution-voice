@@ -1,5 +1,6 @@
 package com.aisolutionvoice.api.Board.entity;
 
+import com.aisolutionvoice.api.HotwordScript.entity.HotwordScript;
 import com.aisolutionvoice.api.post.entity.Post;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -32,10 +33,6 @@ public class Board {
     // 게시판 설명 (선택)
     private String description;
 
-    // 게시판의 필수 스크립트 목록 (BoardScriptMapping 통해 연결)
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BoardScriptMapping> scriptMappings = new ArrayList<>();
-
     // 게시글 목록 (사용자 참여)
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
@@ -50,11 +47,8 @@ public class Board {
     @Column(nullable = false)
     private boolean deleted = false;
 
-    //== 연관관계 편의 메서드 ==//
-    public void addScriptMapping(BoardScriptMapping mapping) {
-        scriptMappings.add(mapping);
-        mapping.setBoard(this);
-    }
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<HotwordScript> scripts = new ArrayList<>();
 
     public void addPost(Post post) {
         posts.add(post);

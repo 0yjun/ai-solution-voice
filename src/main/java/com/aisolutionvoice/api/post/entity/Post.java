@@ -28,7 +28,8 @@ public class Post {
 
     private String title;
 
-    // 작성자 (User)
+    private String memo;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
@@ -38,7 +39,6 @@ public class Post {
     @JoinColumn(name = "board_id", nullable = false)
     private Board board;
 
-    // 결과물 (UtteranceData) - 일대다, 조회용
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VoiceData> voiceDataList = new ArrayList<>();
 

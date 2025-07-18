@@ -1,5 +1,6 @@
 package com.aisolutionvoice.api.HotwordScript.entity;
 
+import com.aisolutionvoice.api.Board.entity.Board;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -15,8 +16,12 @@ public class HotwordScript {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long script_id;
+    private Long scriptId;
 
     @Column(nullable = false)
     private String text;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id", nullable = false)
+    private Board board;
 }

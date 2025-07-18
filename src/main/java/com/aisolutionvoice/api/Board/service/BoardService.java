@@ -8,6 +8,7 @@ import com.aisolutionvoice.api.HotwordScript.entity.HotwordScript;
 import com.aisolutionvoice.exception.CustomException;
 import com.aisolutionvoice.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,17 +19,17 @@ import java.util.List;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final ModelMapper modelMapper;
 
     @Transactional(readOnly = true)
     public BoardFormDto getBoardForm(Long boardId) {
-        Board board = boardRepository.findByIdWithScripts(boardId)
+        Board board = boardRepository.findBoardById(boardId)
                 .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_COMMON_ERROR));
 
-        List<HotwordScriptDto> scripts = board.getScriptMappings().stream()
-                .map(mapping -> {
-                    HotwordScript script = mapping.getHotwordScript();
-                    return new HotwordScriptDto(script.getScript_id(), script.getText());
-                })
+        List<HotwordScriptDto> scripts = board.getScripts().stream()
+                .map(script ->
+                    modelMapper.map(script, HotwordScriptDto.class)
+                )
                 .toList();
 
         return new BoardFormDto(

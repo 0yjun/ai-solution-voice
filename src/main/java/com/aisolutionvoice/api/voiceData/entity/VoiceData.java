@@ -29,16 +29,6 @@ public class VoiceData {
     @CreationTimestamp
     private LocalDateTime submittedAt;
 
-    // 누가
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
-
-    // 어느 게시판에서 (정책 추적용)
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "board_id", nullable = false)
-    private Board board;
-
     // 어느 게시글(참여 세션)에서
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "post_id", nullable = false)

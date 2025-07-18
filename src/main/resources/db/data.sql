@@ -1,3 +1,7 @@
+INSERT INTO member(login_Id, password, role)
+values ('user', '$2a$10$RxleyLLD5DwC4vNmrY/fOu3O6TAKVY40z4WqxXiLAiobEvHxJ9oce','USER'),
+       ('user2', '$2a$10$RxleyLLD5DwC4vNmrY/fOu3O6TAKVY40z4WqxXiLAiobEvHxJ9oce','USER');
+
 INSERT INTO terms (term_id, type, title, content, version, is_required, created_at, updated_at)
 VALUES
     (1, 'PRIVACY', '개인정보 처리방침',
@@ -21,22 +25,14 @@ values
 
 -- 게시글
 insert into BOARD(ID, NAME, DESCRIPTION, DELETED  )
-values (1, '호출어입력게시판','호출어입력게시판설명', false);
+values (1, '2025년 하반기 호출어 입력','2025년 하반기에 생성된 호출어 리스트입니다. 이를 확인하고 음성을 입력해 주세요.', false);
 
 -- 호출어 스크립트
-INSERT INTO hotword_script (text)
+INSERT INTO hotword_script (text,board_id)
 VALUES
-    ('마루야 불 꺼줘'),
-    ('헤이 마루, 음악 틀어줘'),
-    ('마루야 창문 열어'),
-    ('시리야 날씨 알려줘'),
-    ('마루야 다음 곡 재생');
+    ('마루야 불 꺼줘',1),
+    ('헤이 마루, 음악 틀어줘',1),
+    ('마루야 창문 열어',1),
+    ('시리야 날씨 알려줘',1),
+    ('마루야 다음 곡 재생',1);
 
--- 호출어 게시판 매핑
-INSERT INTO board_script_mapping (board_id, hotword_script_id, display_order)
-VALUES
-    (1, 1, 1),
-    (1, 2, 2),
-    (1, 3, 3),
-    (1, 4, 4),
-    (1, 5, 5);
