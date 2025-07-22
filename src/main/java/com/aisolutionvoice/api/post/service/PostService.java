@@ -5,6 +5,7 @@ import com.aisolutionvoice.api.Board.service.BoardService;
 import com.aisolutionvoice.api.member.entity.Member;
 import com.aisolutionvoice.api.member.service.MemberService;
 import com.aisolutionvoice.api.post.dto.PostCreateDto;
+import com.aisolutionvoice.api.post.dto.PostDetailDto;
 import com.aisolutionvoice.api.post.dto.PostSummaryDto;
 import com.aisolutionvoice.api.post.entity.Post;
 import com.aisolutionvoice.api.post.repository.PostRepository;
@@ -43,6 +44,10 @@ public class PostService {
         return postRepository.findSummaryByBoardId(boardId, pageable)
                 .map(PostSummaryDto::applyDefaultTitle);
     }
+
+//    public PostDetailDto getByPostId(Long postId){
+//        return postRepository.findByPostIdWithScriptAndVoiceData(postId);
+//    }
 
     @Transactional
     public void createPostWithVoiceFiles(PostCreateDto dto, Map<String, MultipartFile> files,Integer memberId) {

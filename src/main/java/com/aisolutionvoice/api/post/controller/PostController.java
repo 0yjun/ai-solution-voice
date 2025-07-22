@@ -1,6 +1,7 @@
 package com.aisolutionvoice.api.post.controller;
 
 import com.aisolutionvoice.api.post.dto.PostCreateDto;
+import com.aisolutionvoice.api.post.dto.PostDetailDto;
 import com.aisolutionvoice.api.post.dto.PostSummaryDto;
 import com.aisolutionvoice.api.post.service.PostService;
 import com.aisolutionvoice.security.model.CustomMemberDetails;
@@ -33,6 +34,13 @@ public class PostController {
 
         return ResponseEntity.ok(postSummaryDtoPage);
     }
+
+//    @GetMapping("/post/{postId}")
+//    public ResponseEntity<PostDetailDto> getPostId(@PathVariable Long postId) {
+//        PostDetailDto postDetailDto = postService.getByPostId(postId);
+//
+//        return ResponseEntity.ok(postDetailDto);
+//    }
 
     @PostMapping( consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadPostWithVoice(

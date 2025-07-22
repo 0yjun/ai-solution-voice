@@ -37,10 +37,10 @@ public class Post {
     // 과제 템플릿 (Board)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "board_id", nullable = false)
-    private Board board;
+    public Board board;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<VoiceData> voiceDataList = new ArrayList<>();
+    public List<VoiceData> voiceDataList = new ArrayList<>();
 
     // 생성 시간 (선택)
     @CreationTimestamp
