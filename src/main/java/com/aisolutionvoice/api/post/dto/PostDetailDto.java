@@ -1,5 +1,6 @@
 package com.aisolutionvoice.api.post.dto;
 
+import com.aisolutionvoice.api.HotwordScript.dto.HotwordScriptDto;
 import com.aisolutionvoice.api.HotwordScript.entity.HotwordScript;
 import com.aisolutionvoice.api.voiceData.dto.VoiceDataDto;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -41,15 +42,21 @@ public class PostDetailDto {
 
     @Schema(description = "음성데이터 리스트")
     @NotBlank
-    private List<HotwordScript> scriptList;
+    private List<HotwordScriptDto> scripts;
 
-    public PostDetailDto(Long postId, String title, String loginId, LocalDateTime createAt
-            , List<HotwordScript> hotwordScriptList
-    ) {
+    public PostDetailDto(Long postId, String title, List<HotwordScriptDto> scripts) {
         this.postId = postId;
         this.title = title;
-        this.writerLoginId = loginId;
-        this.createAt = createAt.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        this.scriptList = hotwordScriptList;
+        this.scripts = scripts;
+    }
+
+    public static PostDetailDto fromFlatRows(List<PostFlatRowDto> rows) {
+        if (rows.isEmpty()) return null;
+        PostFlatRowDto first = rows.get(0);
+        List<HotwordScriptDto> scripts = rows.stream()
+
+                .map(r -> new HotwordScriptDto(r.getHotwordScriptId(), r.getHotwordText(), r.getVoiceDataId()))
+                .toList();
+        return new PostDetailDto(first.getPostId(), first.getTitle(), scripts);
     }
 }

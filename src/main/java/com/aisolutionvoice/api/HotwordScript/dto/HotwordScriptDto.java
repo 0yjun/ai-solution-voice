@@ -18,4 +18,7 @@ public class HotwordScriptDto {
 
     @Schema(description = "호출어 명", example = "시리야")
     private String text;
+
+    @Schema(description = "음성 아이디", example = "1")
+    private Long voiceDataId;
 }

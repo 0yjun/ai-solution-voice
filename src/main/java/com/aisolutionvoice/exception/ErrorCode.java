@@ -25,10 +25,14 @@ public enum ErrorCode {
     VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "VLD001", "%s 필드 오류: %s"),
 
     //파일처리관련 오류
-    FILE_EMPTY_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "FILE001","저장할 파일이 비어있습니다"),
-    FILE_SAVE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "FILE001","저장할 파일이 비어있습니다"),
+    FILE_EMPTY_ERROR(HttpStatus.NOT_FOUND, "FILE001","저장할 파일이 비어있습니다"),
+    FILE_SAVE_ERROR(HttpStatus.NOT_FOUND, "FILE002","저장할 파일이 비어있습니다"),
+    INVALID_FILE_PATH(HttpStatus.NOT_FOUND, "FILE003","파일경로가 올바르지 않습니다"),
+
+    DUPLICATE_POST_EXISTS(HttpStatus.CONFLICT, "POST001", "게시글이 중복되었습니다"),
     // 서버오류
-    INTERNAL_COMMON_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMN001","서버 내부 오류");
+    INTERNAL_COMMON_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMN001","서버 내부 오류"),
+    RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND, "COMN002","리소스를 찾을 수 없습니다.");
     private final HttpStatus httpStatus;
     private final String     code;
     private final String     message;

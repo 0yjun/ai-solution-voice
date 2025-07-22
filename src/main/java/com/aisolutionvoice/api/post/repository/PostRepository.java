@@ -3,6 +3,7 @@ package com.aisolutionvoice.api.post.repository;
 import com.aisolutionvoice.api.Board.entity.Board;
 import com.aisolutionvoice.api.member.entity.Member;
 import com.aisolutionvoice.api.post.dto.PostDetailDto;
+import com.aisolutionvoice.api.post.dto.PostFlatRowDto;
 import com.aisolutionvoice.api.post.dto.PostSummaryDto;
 import com.aisolutionvoice.api.post.entity.Post;
 import org.springframework.data.domain.Page;
@@ -23,14 +24,24 @@ public interface PostRepository  extends JpaRepository<Post, Long> {
 """)
     Page<PostSummaryDto> findSummaryByBoardId(@Param("boardId") Long boardId, Pageable pageable);
 
-//    @Query("""
-//    SELECT new com.aisolutionvoice.api.post.dto.PostDetailDto(p.id, p.title, m.loginId, p.createdAt, b.scripts)
-//    FROM Post p
-//    JOIN p.member m
-//    join fetch p.board b
-//    WHERE p.id = :postId
-//""")
-//    PostDetailDto findByPostIdWithScriptAndVoiceData(@Param("postId") Long postId);
+    @Query("""
+        SELECT new com.aisolutionvoice.api.post.dto.PostFlatRowDto(
+            p.id,
+            p.title,
+            h.scriptId,
+            h.text,
+            v.id
+        )
+        FROM Post p
+        JOIN HotwordScript h ON h.board.id = p.board.id
+        LEFT JOIN VoiceData v ON v.post.id = p.id AND v.hotwordScript.scriptId = h.scriptId
+        WHERE p.id = :postId
+        and h.scriptId = 1
+        ORDER BY h.scriptId
+    """)
+    List<PostFlatRowDto> findPostFlatRows(@Param("postId") Long postId);
 
     Optional<Post> findByMemberAndBoard(Member member, Board board);
+
+    Boolean existsByMemberAndBoard(Member member, Board board);
 }

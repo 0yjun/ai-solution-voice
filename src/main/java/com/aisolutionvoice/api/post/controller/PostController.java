@@ -35,12 +35,12 @@ public class PostController {
         return ResponseEntity.ok(postSummaryDtoPage);
     }
 
-//    @GetMapping("/post/{postId}")
-//    public ResponseEntity<PostDetailDto> getPostId(@PathVariable Long postId) {
-//        PostDetailDto postDetailDto = postService.getByPostId(postId);
-//
-//        return ResponseEntity.ok(postDetailDto);
-//    }
+    @GetMapping("/{postId}")
+    public ResponseEntity<PostDetailDto> getPostId(@PathVariable Long postId) {
+        PostDetailDto postDetailDto = postService.getByPostId(postId);
+
+        return ResponseEntity.ok(postDetailDto);
+    }
 
     @PostMapping( consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadPostWithVoice(
@@ -49,11 +49,7 @@ public class PostController {
             @AuthenticationPrincipal CustomMemberDetails customMemberDetails
     ) {
         Integer memberId = customMemberDetails.getUserId();
-        try{
-            postService.createPostWithVoiceFiles(dto, files, memberId);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        postService.createPostWithVoiceFiles(dto, files, memberId);
 
         return ResponseEntity.ok(Map.of("data","ok"));
     }
