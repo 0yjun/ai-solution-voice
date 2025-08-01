@@ -3,6 +3,7 @@ package com.aisolutionvoice.api.post.controller;
 import com.aisolutionvoice.api.post.dto.PostCreateDto;
 import com.aisolutionvoice.api.post.dto.PostDetailDto;
 import com.aisolutionvoice.api.post.dto.PostSummaryDto;
+import com.aisolutionvoice.api.post.dto.PostUpdateDto;
 import com.aisolutionvoice.api.post.service.PostService;
 import com.aisolutionvoice.security.model.CustomMemberDetails;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -50,6 +51,18 @@ public class PostController {
     ) {
         Integer memberId = customMemberDetails.getUserId();
         postService.createPostWithVoiceFiles(dto, files, memberId);
+
+        return ResponseEntity.ok(Map.of("data","ok"));
+    }
+
+    @PutMapping( consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> editPostWithVoice(
+            @RequestPart("PostUpdateDto") @Validated PostUpdateDto dto,
+            @RequestParam Map<String, MultipartFile> files,
+            @AuthenticationPrincipal CustomMemberDetails customMemberDetails
+    ) {
+        Integer memberId = customMemberDetails.getUserId();
+        postService.updatePostWithVoiceFiles(dto, files, memberId);
 
         return ResponseEntity.ok(Map.of("data","ok"));
     }

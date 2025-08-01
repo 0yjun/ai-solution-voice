@@ -54,8 +54,7 @@ public class PostDetailDto {
         if (rows.isEmpty()) return null;
         PostFlatRowDto first = rows.get(0);
         List<HotwordScriptDto> scripts = rows.stream()
-
-                .map(r -> new HotwordScriptDto(r.getHotwordScriptId(), r.getHotwordText(), r.getVoiceDataId()))
+                .map(r -> new HotwordScriptDto(r.getHotwordScriptId(), r.getHotwordText(), r.getVoiceDataUrl()))
                 .toList();
         return new PostDetailDto(first.getPostId(), first.getTitle(), scripts);
     }

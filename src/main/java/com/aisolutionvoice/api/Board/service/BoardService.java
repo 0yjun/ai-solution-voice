@@ -33,7 +33,7 @@ public class BoardService {
                 .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_COMMON_ERROR));
 
         List<HotwordScriptDto> scripts = board.getScripts().stream()
-                .filter(script -> script.getScriptId()==1)
+                //.filter(script -> script.getScriptId()==1)
                 .map(script ->
                     modelMapper.map(script, HotwordScriptDto.class)
                 )

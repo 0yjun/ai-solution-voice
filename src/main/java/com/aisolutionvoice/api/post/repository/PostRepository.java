@@ -36,7 +36,6 @@ public interface PostRepository  extends JpaRepository<Post, Long> {
         JOIN HotwordScript h ON h.board.id = p.board.id
         LEFT JOIN VoiceData v ON v.post.id = p.id AND v.hotwordScript.scriptId = h.scriptId
         WHERE p.id = :postId
-        and h.scriptId = 1
         ORDER BY h.scriptId
     """)
     List<PostFlatRowDto> findPostFlatRows(@Param("postId") Long postId);

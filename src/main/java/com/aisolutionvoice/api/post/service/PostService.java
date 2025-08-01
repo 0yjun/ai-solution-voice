@@ -4,10 +4,7 @@ import com.aisolutionvoice.api.Board.entity.Board;
 import com.aisolutionvoice.api.Board.service.BoardService;
 import com.aisolutionvoice.api.member.entity.Member;
 import com.aisolutionvoice.api.member.service.MemberService;
-import com.aisolutionvoice.api.post.dto.PostCreateDto;
-import com.aisolutionvoice.api.post.dto.PostDetailDto;
-import com.aisolutionvoice.api.post.dto.PostFlatRowDto;
-import com.aisolutionvoice.api.post.dto.PostSummaryDto;
+import com.aisolutionvoice.api.post.dto.*;
 import com.aisolutionvoice.api.post.entity.Post;
 import com.aisolutionvoice.api.post.repository.PostRepository;
 import com.aisolutionvoice.api.voiceData.entity.VoiceData;
@@ -74,6 +71,28 @@ public class PostService {
         }catch(DataIntegrityViolationException e){
             throw new CustomException(ErrorCode.DUPLICATE_POST_EXISTS);
         }catch (Exception e){
+            throw new CustomException(ErrorCode.INTERNAL_COMMON_ERROR);
+        }
+    }
+
+    @Transactional
+    public void updatePostWithVoiceFiles(PostUpdateDto dto, Map<String, MultipartFile> files, Integer memberId) {
+        Post post = updatePost(dto, memberId);
+        voiceDataService.saveVoiceDataList(post,files);
+    }
+
+    public Post updatePost(PostUpdateDto dto, Integer memberId) {
+        Post post = postRepository.findById(dto.getPostId())
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
+
+        if (!post.getMember().getMemberId().equals(memberId)) {
+            throw new CustomException(ErrorCode.AUTH_NOT_AUTHENTICATED);
+        }
+
+        post.setMemo(dto.getMemo());
+        try {
+            return postRepository.saveAndFlush(post);
+        } catch (Exception e) {
             throw new CustomException(ErrorCode.INTERNAL_COMMON_ERROR);
         }
     }
