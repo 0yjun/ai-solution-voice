@@ -30,6 +30,8 @@ public class Post {
 
     private String memo;
 
+    private boolean isChecked;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
@@ -63,6 +65,9 @@ public class Post {
     }
 
     public  void setMemo(String memo){ this.memo = memo;}
+
+    public void setChecked(boolean checked){this.isChecked = checked;}
+
     //== 비즈니스 로직 ==//
     public void addVoiceData(VoiceData data) {
         if (this.voiceDataList == null) {
@@ -70,6 +75,23 @@ public class Post {
         }
         voiceDataList.add(data);
         data.setPost(this);
+    }
+
+    public void updateVoiceData(VoiceData updatedData) {
+        if (this.voiceDataList == null) {
+            this.voiceDataList = new ArrayList<>();
+        }
+
+        this.voiceDataList.stream()
+                .filter(v -> v.getHotwordScript() != null &&
+                        v.getHotwordScript().getScriptId().equals(updatedData.getHotwordScript().getScriptId()))
+                .findFirst()
+                .ifPresentOrElse(existing -> {
+                    existing.setAudioFilePath(updatedData.getAudioFilePath());
+                }, () -> {
+                    this.voiceDataList.add(updatedData);
+                    updatedData.setPost(this);
+                });
     }
 
 }

@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostUpdateDto {
-    @Schema(description = "게시글 아이", example = "1")
+    @Schema(description = "게시글 아이디", example = "1")
     @NotBlank
     private Long postId;
 

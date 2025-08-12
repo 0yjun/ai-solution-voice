@@ -32,12 +32,16 @@ public class PostSummaryDto {
     @NotBlank
     private String createAt;
 
+    @Schema(description = "체크여부", example = "true/false")
+    private boolean isChecked;
+
     // JPQL 프로젝션을 위한 생성자
-    public PostSummaryDto(Long postId, String title, String loginId, LocalDateTime createAt) {
+    public PostSummaryDto(Long postId, String title, String loginId, LocalDateTime createAt, boolean isChecked) {
         this.postId = postId;
         this.title = title;
         this.writerLoginId = loginId;
         this.createAt = createAt.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        this.isChecked = isChecked;
     }
 
     public PostSummaryDto applyDefaultTitle() {

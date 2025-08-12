@@ -7,8 +7,6 @@ import com.aisolutionvoice.api.member.service.MemberService;
 import com.aisolutionvoice.api.post.dto.*;
 import com.aisolutionvoice.api.post.entity.Post;
 import com.aisolutionvoice.api.post.repository.PostRepository;
-import com.aisolutionvoice.api.voiceData.entity.VoiceData;
-import com.aisolutionvoice.api.voiceData.repository.VoiceDataRepository;
 import com.aisolutionvoice.api.voiceData.service.VoiceDataService;
 import com.aisolutionvoice.exception.CustomException;
 import com.aisolutionvoice.exception.ErrorCode;
@@ -20,15 +18,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -37,13 +30,19 @@ public class PostService {
     private  final PostRepository postRepository;
     private final MemberService memberService;
     private  final BoardService boardService;
-    private final ModelMapper modelMapper;
     private final VoiceDataService voiceDataService;
 
 
-    public Page<PostSummaryDto> getByBoardId(Long boardId, Pageable pageable){
-        return postRepository.findSummaryByBoardId(boardId, pageable)
-                .map(PostSummaryDto::applyDefaultTitle);
+    public Page<PostSummaryDto> getByBoardId(Long boardId, String title, Pageable pageable) {
+        Page<PostSummaryDto> result;
+
+        if (title == null || title.isBlank()) {
+            result = postRepository.findSummaryByBoardId(boardId, pageable);
+        } else {
+            result = postRepository.findSummaryByBoardIdAndTitleLike(boardId, "%" + title + "%", pageable);
+        }
+
+        return result.map(PostSummaryDto::applyDefaultTitle);
     }
 
     public PostDetailDto getByPostId(Long postId){
@@ -51,10 +50,16 @@ public class PostService {
         return PostDetailDto.fromFlatRows(flatRowDtoList);
     }
 
+    public Boolean existPostByMemberIdAndBoardId(Integer memberId, Long postId){
+        Member member = memberService.getMemberProxy(memberId);
+        Board board = boardService.getBoardByProxy(1);
+        return postRepository.existsByMemberAndBoard(member, board);
+    }
+
     @Transactional
     public void createPostWithVoiceFiles(PostCreateDto dto, Map<String, MultipartFile> files,Integer memberId) {
         Post post = createPost(dto, memberId);
-        voiceDataService.saveVoiceDataList(post,files);
+        voiceDataService.createVoiceDataList(post,files);
     }
 
     public Post createPost(PostCreateDto dto, Integer memberId) {
@@ -78,22 +83,31 @@ public class PostService {
     @Transactional
     public void updatePostWithVoiceFiles(PostUpdateDto dto, Map<String, MultipartFile> files, Integer memberId) {
         Post post = updatePost(dto, memberId);
-        voiceDataService.saveVoiceDataList(post,files);
+        voiceDataService.updateVoiceDataList(post,files);
     }
 
     public Post updatePost(PostUpdateDto dto, Integer memberId) {
-        Post post = postRepository.findById(dto.getPostId())
-                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
+        Member member = memberService.getMemberProxy(memberId);
+        Board board = boardService.getBoardByProxy(1);
+        log.info(dto.getMemo());
+        log.info(dto.getMemo());
 
-        if (!post.getMember().getMemberId().equals(memberId)) {
-            throw new CustomException(ErrorCode.AUTH_NOT_AUTHENTICATED);
-        }
-
-        post.setMemo(dto.getMemo());
-        try {
-            return postRepository.saveAndFlush(post);
-        } catch (Exception e) {
+        try{
+            Post updatePost = postRepository.findByMemberAndBoard(member, board)
+                    .orElseThrow(()->new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
+            updatePost.setMemo(dto.getMemo());
+            return postRepository.saveAndFlush(updatePost);
+        }catch(DataIntegrityViolationException e){
+            throw new CustomException(ErrorCode.DUPLICATE_POST_EXISTS);
+        }catch (Exception e){
             throw new CustomException(ErrorCode.INTERNAL_COMMON_ERROR);
         }
+    }
+
+    @Transactional
+    public void setChecked(Long id, boolean checked){
+        Post updatePost = postRepository.findById(id)
+                .orElseThrow(()->new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
+        updatePost.setChecked(checked);
     }
 }

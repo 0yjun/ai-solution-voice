@@ -42,4 +42,8 @@ public class VoiceData {
     public void setPost(Post post) {
         this.post = post;
     }
+
+    public void setAudioFilePath(String audioFilePath){
+        this.audioFilePath = audioFilePath;
+    }
 }

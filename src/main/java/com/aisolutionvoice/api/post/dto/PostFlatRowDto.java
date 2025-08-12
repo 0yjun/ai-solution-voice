@@ -14,7 +14,8 @@ import java.util.List;
 @Data
 public class PostFlatRowDto {
     private static final String BASE_VOICE_DATA_API_PATH = "/api/voice-data/"; // 상수로 관리
-    public PostFlatRowDto(Long postId, String title, Long hotwordScriptId, String hotwordText, Long voiceDataId) {
+    public PostFlatRowDto(Long postId, String title, Long hotwordScriptId, String hotwordText, Long voiceDataId,
+                          String memo, boolean isChecked) {
         this.postId = postId;
         this.title = title;
         this.hotwordScriptId = hotwordScriptId;
@@ -22,6 +23,8 @@ public class PostFlatRowDto {
         this.voiceDataUrl = (voiceDataId != null)
                 ? BASE_VOICE_DATA_API_PATH + voiceDataId
                 : null;
+        this.memo = memo;
+        this.isChecked = isChecked;
     }
 
     @Schema(description = "로그인 ID", example = "admin1")
@@ -40,6 +43,12 @@ public class PostFlatRowDto {
 
     @Schema(description = "음성데이터 아이디", example = "/api/voice-data/1")
     private String voiceDataUrl;
+
+    @Schema(description = "게시글 메모", example = "1234")
+    private String memo;
+
+    @Schema(description = "체크여부", example = "true/false")
+    private boolean isChecked;
 
     public PostFlatRowDto(){
 

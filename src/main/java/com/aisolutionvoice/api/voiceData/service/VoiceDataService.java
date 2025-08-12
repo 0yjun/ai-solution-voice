@@ -47,7 +47,7 @@ public class VoiceDataService {
     }
 
     @Transactional
-    public void saveVoiceDataList(Post post, Map<String, MultipartFile> files) {
+    public void createVoiceDataList(Post post, Map<String, MultipartFile> files) {
         for (Map.Entry<String, MultipartFile> entry : files.entrySet()) {
             if (!entry.getKey().startsWith(VOICE_PREFIX)) continue;
 
@@ -63,6 +63,25 @@ public class VoiceDataService {
                     .build();
 
             post.addVoiceData(voiceData); // 연관관계 유지
+            fileStorageService.store(entry.getValue(), relativePath);
+        }
+    }
+
+    @Transactional
+    public void updateVoiceDataList(Post post, Map<String, MultipartFile> files) {
+        for (Map.Entry<String, MultipartFile> entry : files.entrySet()) {
+            if (!entry.getKey().startsWith(VOICE_PREFIX)) continue;
+
+            Long scriptId = Long.valueOf(entry.getKey().substring(VOICE_PREFIX.length()));
+            HotwordScript script = hotwordScriptService.getScriptByProxy(scriptId);
+
+            String relativePath =
+                    filePathGenerator.generateVoiceDataPath(post.getBoard().getId(), post.getId(), scriptId);
+
+            VoiceData voiceData = voiceDataRepository.findById(script.getScriptId())
+                    .orElseThrow(()->new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
+
+            //post.updateVoiceData(voiceData); // 연관관계 유지
             fileStorageService.store(entry.getValue(), relativePath);
         }
     }

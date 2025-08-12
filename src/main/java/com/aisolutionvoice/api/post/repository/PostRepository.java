@@ -17,7 +17,7 @@ import java.util.Optional;
 
 public interface PostRepository  extends JpaRepository<Post, Long> {
     @Query("""
-    SELECT new com.aisolutionvoice.api.post.dto.PostSummaryDto(p.id, p.title, m.loginId, p.createdAt)
+    SELECT new com.aisolutionvoice.api.post.dto.PostSummaryDto(p.id, p.title, m.loginId, p.createdAt, p.isChecked)
     FROM Post p
     JOIN p.member m
     WHERE p.board.id = :boardId
@@ -25,12 +25,23 @@ public interface PostRepository  extends JpaRepository<Post, Long> {
     Page<PostSummaryDto> findSummaryByBoardId(@Param("boardId") Long boardId, Pageable pageable);
 
     @Query("""
+    SELECT new com.aisolutionvoice.api.post.dto.PostSummaryDto(p.id, p.title, m.loginId, p.createdAt, p.isChecked)
+    FROM Post p
+    JOIN p.member m
+    WHERE p.board.id = :boardId
+    AND p.title LIKE CONCAT('%', :title, '%')
+    """)
+    Page<PostSummaryDto> findSummaryByBoardIdAndTitleLike(@Param("boardId") Long boardId,  @Param("title") String title, Pageable pageable);
+
+    @Query("""
         SELECT new com.aisolutionvoice.api.post.dto.PostFlatRowDto(
             p.id,
             p.title,
             h.scriptId,
             h.text,
-            v.id
+            v.id,
+            p.memo,
+            p.isChecked
         )
         FROM Post p
         JOIN HotwordScript h ON h.board.id = p.board.id
@@ -43,4 +54,5 @@ public interface PostRepository  extends JpaRepository<Post, Long> {
     Optional<Post> findByMemberAndBoard(Member member, Board board);
 
     Boolean existsByMemberAndBoard(Member member, Board board);
+
 }
