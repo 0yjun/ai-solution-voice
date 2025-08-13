@@ -34,16 +34,7 @@ public class PostService {
 
 
     public Page<PostSummaryDto> getByBoardId(PostSearchRequestDto requestDto, Pageable pageable) {
-        Page<PostSummaryDto> result;
-        String title = requestDto.getTitle();
-        Long boardId = requestDto.getBoardId();
-
-        if (title == null || title.isBlank()) {
-            result = postRepository.findSummaryByBoardId(boardId, pageable);
-        } else {
-            result = postRepository.findSummaryByBoardIdAndTitleLike(boardId, "%" + title + "%", pageable);
-        }
-
+        Page<PostSummaryDto> result = postRepository.search(requestDto, pageable);
         return result.map(PostSummaryDto::applyDefaultTitle);
     }
 

@@ -6,6 +6,7 @@ import com.aisolutionvoice.api.post.dto.PostDetailDto;
 import com.aisolutionvoice.api.post.dto.PostFlatRowDto;
 import com.aisolutionvoice.api.post.dto.PostSummaryDto;
 import com.aisolutionvoice.api.post.entity.Post;
+import com.aisolutionvoice.api.post.repository.query.PostQueryRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,7 +16,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface PostRepository  extends JpaRepository<Post, Long> {
+public interface PostRepository  extends JpaRepository<Post, Long>, PostQueryRepository {
     @Query("""
     SELECT new com.aisolutionvoice.api.post.dto.PostSummaryDto(p.id, p.title, m.loginId, p.createdAt, p.isChecked)
     FROM Post p

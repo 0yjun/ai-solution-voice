@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Schema(description = "게시글 상세보기 제공 DTO")
@@ -26,8 +27,8 @@ public class PostSearchRequestDto {
     private Boolean isChecked;
 
     @Schema(description = "생성시작일자", example = "2020-01-01")
-    private String createdStart;
+    private LocalDate createdFrom;
 
     @Schema(description = "생성종료일자", example = "2025-05-12")
-    private String createdEnd;
+    private LocalDate createdTo;
 }
