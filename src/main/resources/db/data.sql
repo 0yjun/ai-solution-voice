@@ -1,7 +1,7 @@
 INSERT INTO member(login_Id, password, role)
 values ('user', '$2a$10$RxleyLLD5DwC4vNmrY/fOu3O6TAKVY40z4WqxXiLAiobEvHxJ9oce','USER'),
-       ('user2', '$2a$10$RxleyLLD5DwC4vNmrY/fOu3O6TAKVY40z4WqxXiLAiobEvHxJ9oce','USER');
-
+       ('user2', '$2a$10$RxleyLLD5DwC4vNmrY/fOu3O6TAKVY40z4WqxXiLAiobEvHxJ9oce','USER'),
+       ('admin', '$2a$10$RxleyLLD5DwC4vNmrY/fOu3O6TAKVY40z4WqxXiLAiobEvHxJ9oce','ADMIN');
 INSERT INTO terms (term_id, type, title, content, version, is_required, created_at, updated_at)
 VALUES
     (1, 'PRIVACY', '개인정보 처리방침',

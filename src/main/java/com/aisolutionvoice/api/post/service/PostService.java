@@ -33,8 +33,10 @@ public class PostService {
     private final VoiceDataService voiceDataService;
 
 
-    public Page<PostSummaryDto> getByBoardId(Long boardId, String title, Pageable pageable) {
+    public Page<PostSummaryDto> getByBoardId(PostSearchRequestDto requestDto, Pageable pageable) {
         Page<PostSummaryDto> result;
+        String title = requestDto.getTitle();
+        Long boardId = requestDto.getBoardId();
 
         if (title == null || title.isBlank()) {
             result = postRepository.findSummaryByBoardId(boardId, pageable);

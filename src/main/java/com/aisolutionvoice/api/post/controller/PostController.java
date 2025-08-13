@@ -1,10 +1,7 @@
 package com.aisolutionvoice.api.post.controller;
 
 import com.aisolutionvoice.api.Role.domain.Role;
-import com.aisolutionvoice.api.post.dto.PostCreateDto;
-import com.aisolutionvoice.api.post.dto.PostDetailDto;
-import com.aisolutionvoice.api.post.dto.PostSummaryDto;
-import com.aisolutionvoice.api.post.dto.PostUpdateDto;
+import com.aisolutionvoice.api.post.dto.*;
 import com.aisolutionvoice.api.post.service.PostService;
 import com.aisolutionvoice.exception.CustomException;
 import com.aisolutionvoice.exception.ErrorCode;
@@ -36,11 +33,10 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<Page<PostSummaryDto>> getPostsByBoard(
-            @RequestParam Long boardId,
-            Pageable pageable,
-            @Nullable  @RequestParam String title
+            PostSearchRequestDto searchRequest,
+            Pageable pageable
     ) {
-        Page<PostSummaryDto> postSummaryDtoPage = postService.getByBoardId(boardId, title, pageable);
+        Page<PostSummaryDto> postSummaryDtoPage = postService.getByBoardId(searchRequest, pageable);
 
         return ResponseEntity.ok(postSummaryDtoPage);
     }

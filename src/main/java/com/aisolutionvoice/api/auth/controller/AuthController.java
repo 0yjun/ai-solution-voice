@@ -89,9 +89,15 @@ public class AuthController {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
         // 필요한 정보만 추려서 DTO로 반환
+        String role = userDetails.getAuthorities()
+                .iterator()
+                .next()
+                .getAuthority()
+                .replaceFirst("^ROLE_", ""); // 접두사 제거
+
         return ResponseEntity.ok(Map.of(
                 "loginId", userDetails.getUsername(),
-                "role", userDetails.getAuthorities().iterator().next().getAuthority()
+                "role", role
         ));
     }
 }
