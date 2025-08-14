@@ -16,5 +16,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PostQueryRepository {
-    Page<PostSummaryDto> search(PostSearchRequestDto condition, Pageable pageable);
+    Page<PostSummaryDto> search(PostSearchRequestDto condition, Integer memberId, Pageable pageable);
+
+    Optional<Long> findPostIdByMemberIdAndBoardId(Integer memberId, Long boardId);
+
+    //List<PostFlatRowDto> findPostFlatRows(Long postId);
 }

@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,8 +34,8 @@ public class PostService {
     private final VoiceDataService voiceDataService;
 
 
-    public Page<PostSummaryDto> getByBoardId(PostSearchRequestDto requestDto, Pageable pageable) {
-        Page<PostSummaryDto> result = postRepository.search(requestDto, pageable);
+    public Page<PostSummaryDto> getSearch(PostSearchRequestDto requestDto, Integer memberId, Pageable pageable) {
+        Page<PostSummaryDto> result = postRepository.search(requestDto, memberId, pageable);
         return result.map(PostSummaryDto::applyDefaultTitle);
     }
 
@@ -43,10 +44,8 @@ public class PostService {
         return PostDetailDto.fromFlatRows(flatRowDtoList);
     }
 
-    public Boolean existPostByMemberIdAndBoardId(Integer memberId, Long postId){
-        Member member = memberService.getMemberProxy(memberId);
-        Board board = boardService.getBoardByProxy(1);
-        return postRepository.existsByMemberAndBoard(member, board);
+    public Optional<Long> findMyPostId(Integer memberId, Long boardId){
+        return postRepository.findPostIdByMemberIdAndBoardId(memberId, boardId);
     }
 
     @Transactional

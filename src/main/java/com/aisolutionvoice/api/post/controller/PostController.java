@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -34,10 +35,14 @@ public class PostController {
     @GetMapping
     public ResponseEntity<Page<PostSummaryDto>> getPostsByBoard(
             PostSearchRequestDto searchRequest,
-            Pageable pageable
+            Pageable pageable,
+            @AuthenticationPrincipal CustomMemberDetails customMemberDetails
     ) {
-        Page<PostSummaryDto> postSummaryDtoPage = postService.getByBoardId(searchRequest, pageable);
-
+        Integer memberId = null;
+        if(Boolean.TRUE.equals(searchRequest.getOnlyMyPosts())){
+            memberId = customMemberDetails.getUserId();
+        }
+        Page<PostSummaryDto> postSummaryDtoPage = postService.getSearch(searchRequest, memberId ,pageable);
         return ResponseEntity.ok(postSummaryDtoPage);
     }
 
@@ -48,15 +53,15 @@ public class PostController {
         return ResponseEntity.ok(postDetailDto);
     }
 
-    @GetMapping("/check-created")
-    public ResponseEntity<Boolean> isPostExist(
+    @GetMapping("/me/check")
+    public ResponseEntity<?> checkMe(
             @AuthenticationPrincipal CustomMemberDetails customMemberDetails,
             @RequestParam Long boardId
     ) {
         Integer memberId = customMemberDetails.getUserId();
-        Boolean exist = postService.existPostByMemberIdAndBoardId(memberId, boardId);
-
-        return ResponseEntity.ok(exist);
+        return postService.findMyPostId(memberId, boardId)
+                .map(ResponseEntity::ok)                      // 200 + postId
+                .orElseGet(() -> ResponseEntity.noContent().build()); // 204
     }
 
     @PostMapping( consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -83,7 +88,7 @@ public class PostController {
         return ResponseEntity.ok(Map.of("data","ok"));
     }
 
-    @PatchMapping("/{postId}/check")
+    @PatchMapping("/{postId:\\\\d+}/check")
     @PreAuthorize("hasRole(Role.ADMIN)")
     public ResponseEntity<?> setChecked(
             @PathVariable Long postId,

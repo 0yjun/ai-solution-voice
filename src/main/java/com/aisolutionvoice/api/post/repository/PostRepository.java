@@ -18,23 +18,6 @@ import java.util.Optional;
 
 public interface PostRepository  extends JpaRepository<Post, Long>, PostQueryRepository {
     @Query("""
-    SELECT new com.aisolutionvoice.api.post.dto.PostSummaryDto(p.id, p.title, m.loginId, p.createdAt, p.isChecked)
-    FROM Post p
-    JOIN p.member m
-    WHERE p.board.id = :boardId
-""")
-    Page<PostSummaryDto> findSummaryByBoardId(@Param("boardId") Long boardId, Pageable pageable);
-
-    @Query("""
-    SELECT new com.aisolutionvoice.api.post.dto.PostSummaryDto(p.id, p.title, m.loginId, p.createdAt, p.isChecked)
-    FROM Post p
-    JOIN p.member m
-    WHERE p.board.id = :boardId
-    AND p.title LIKE CONCAT('%', :title, '%')
-    """)
-    Page<PostSummaryDto> findSummaryByBoardIdAndTitleLike(@Param("boardId") Long boardId,  @Param("title") String title, Pageable pageable);
-
-    @Query("""
         SELECT new com.aisolutionvoice.api.post.dto.PostFlatRowDto(
             p.id,
             p.title,
@@ -55,5 +38,4 @@ public interface PostRepository  extends JpaRepository<Post, Long>, PostQueryRep
     Optional<Post> findByMemberAndBoard(Member member, Board board);
 
     Boolean existsByMemberAndBoard(Member member, Board board);
-
 }

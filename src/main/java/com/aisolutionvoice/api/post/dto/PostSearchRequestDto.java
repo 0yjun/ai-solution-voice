@@ -31,4 +31,7 @@ public class PostSearchRequestDto {
 
     @Schema(description = "생성종료일자", example = "2025-05-12")
     private LocalDate createdTo;
+
+    @Schema(description = "내정보만 볼지 여부", example = "true, false")
+    private Boolean onlyMyPosts;
 }

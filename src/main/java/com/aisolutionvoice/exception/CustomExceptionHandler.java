@@ -54,6 +54,8 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<ErrorResponse> handleDb(DataAccessException ex) {
+        log.error(ex.getMessage());
+        ex.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorResponse(ErrorCode.INTERNAL_COMMON_ERROR));
     }
