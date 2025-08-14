@@ -3,6 +3,7 @@ package com.aisolutionvoice.api.HotwordScript.service;
 import com.aisolutionvoice.api.Board.entity.Board;
 import com.aisolutionvoice.api.HotwordScript.entity.HotwordScript;
 import com.aisolutionvoice.api.HotwordScript.repository.HotwordScriptRepository;
+import com.aisolutionvoice.api.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +26,7 @@ public class HotwordScriptService {
     public Page<HotwordScript> getPage(String text, Pageable pageable){
         return hotwordScriptRepository.findHotwordScriptByTextContains(text, pageable);
     }
+
     public Long save(String text){
         HotwordScript newHotwordScript = HotwordScript.builder()
                 .text(text)

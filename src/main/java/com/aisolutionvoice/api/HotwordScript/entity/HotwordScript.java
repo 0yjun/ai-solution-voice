@@ -26,4 +26,8 @@ public class HotwordScript {
     @JoinColumn(name = "board_id", nullable = true)
     @JsonIgnore
     public Board board;
+
+    public void setBoard(Board board){
+        this.board = board;
+    }
 }

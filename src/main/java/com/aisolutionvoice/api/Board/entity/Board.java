@@ -54,4 +54,9 @@ public class Board {
         posts.add(post);
         post.setBoard(this);
     }
+
+    public void addScript(HotwordScript script){
+        scripts.add(script);
+        script.setBoard(this);
+    }
 }

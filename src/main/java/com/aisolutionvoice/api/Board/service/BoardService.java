@@ -5,6 +5,7 @@ import com.aisolutionvoice.api.Board.entity.Board;
 import com.aisolutionvoice.api.Board.repository.BoardRepository;
 import com.aisolutionvoice.api.HotwordScript.dto.HotwordScriptDto;
 import com.aisolutionvoice.api.HotwordScript.entity.HotwordScript;
+import com.aisolutionvoice.api.HotwordScript.repository.HotwordScriptRepository;
 import com.aisolutionvoice.api.member.entity.Member;
 import com.aisolutionvoice.exception.CustomException;
 import com.aisolutionvoice.exception.ErrorCode;
@@ -20,6 +21,7 @@ import java.util.List;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final HotwordScriptRepository hotwordScriptRepository;
     private final ModelMapper modelMapper;
 
 
@@ -45,5 +47,31 @@ public class BoardService {
                 board.getDescription(),
                 scripts
         );
+    }
+
+    @Transactional
+    public List<Long> addScripts(Integer boardId, List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            throw new CustomException(ErrorCode.VALIDATION_ERROR);
+        }
+
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_COMMON_ERROR));
+
+        List<Long> distinctIds = ids.stream().distinct().toList();
+        List<HotwordScript> scripts = hotwordScriptRepository.findAllById(distinctIds);
+
+        if (scripts.size() != distinctIds.size()) {
+            throw new CustomException(ErrorCode.VALIDATION_ERROR); // 없는 ID 있음
+        }
+
+        for (HotwordScript s : scripts) {
+            board.addScript(s); // 양방향 편의 메서드
+        }
+
+        // 처리된 스크립트 ID 반환
+        return scripts.stream()
+                .map(HotwordScript::getScriptId)
+                .toList();
     }
 }

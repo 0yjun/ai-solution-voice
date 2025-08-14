@@ -5,15 +5,14 @@ import com.aisolutionvoice.api.Board.service.BoardService;
 import com.aisolutionvoice.api.Role.domain.Role;
 import com.aisolutionvoice.api.menu.dto.MenuClientDto;
 import com.aisolutionvoice.api.menu.service.MenuService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -25,5 +24,16 @@ public class BoardController {
     @GetMapping("/{boardId}/form")
     public BoardFormDto getBoardForm(@PathVariable Long boardId) {
         return boardService.getBoardForm(boardId);
+    }
+
+    @PostMapping("/{boardId/scripts")
+    public ResponseEntity<?> createOne(
+            @PathVariable Integer boardId,
+            @Valid @RequestBody List<Long> reqs
+    ) {
+        List<Long> processedIds = boardService.addScripts(boardId, reqs);
+
+        URI location = URI.create("/api/boards/" + boardId + "/scripts");
+        return ResponseEntity.created(location).body(processedIds);
     }
 }

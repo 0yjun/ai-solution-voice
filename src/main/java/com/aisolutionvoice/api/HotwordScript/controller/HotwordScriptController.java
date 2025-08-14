@@ -3,6 +3,7 @@ package com.aisolutionvoice.api.HotwordScript.controller;
 import com.aisolutionvoice.api.HotwordScript.service.HotwordScriptService;
 import com.aisolutionvoice.api.post.dto.PostCreateDto;
 import com.aisolutionvoice.security.model.CustomMemberDetails;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -25,8 +26,10 @@ import java.util.Map;
 public class HotwordScriptController {
     private final HotwordScriptService hotwordScriptService;
 
-    public ResponseEntity<?> getList(@RequestParam String text, Pageable pageable){
-        Page result = hotwordScriptService.getPage(text, pageable);
+    public ResponseEntity<?> getList(@RequestParam String text, @Nullable Pageable pageable){
+        var result = (pageable == null)
+                ? hotwordScriptService.getList(text)
+                : hotwordScriptService.getPage(text, pageable);
         return ResponseEntity.ok(result);
     }
 
