@@ -39,6 +39,14 @@ public class PostService {
         return result.map(PostSummaryDto::applyDefaultTitle);
     }
 
+    public Long countCheckedPosts(PostSearchRequestDto requestDto, Integer memberId) {
+        return postRepository.countByCheckedTrueAndCond(requestDto, memberId);
+    }
+
+    public Long countAll() {
+        return postRepository.count();
+    }
+
     public PostDetailDto getByPostId(Long postId){
         List<PostFlatRowDto>  flatRowDtoList =  postRepository.findPostFlatRows(postId);
         return PostDetailDto.fromFlatRows(flatRowDtoList);

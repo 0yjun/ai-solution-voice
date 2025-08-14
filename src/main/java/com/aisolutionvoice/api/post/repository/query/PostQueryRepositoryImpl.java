@@ -36,8 +36,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
     private static final QHotwordScript HOTWORD_SCRIPT = QHotwordScript.hotwordScript;
     private static final QVoiceData VOICE_DATA = QVoiceData.voiceData;
 
-    @Override
-    public Page<PostSummaryDto> search(PostSearchRequestDto cond, Integer memberId, Pageable pageable) {
+    private BooleanBuilder getCondition(PostSearchRequestDto cond, Integer memberId){
         BooleanBuilder where = new BooleanBuilder();
 
         LocalDate from = cond.getCreatedFrom();
@@ -52,6 +51,13 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
         if (fromDt != null) where.and(POST.createdAt.goe(fromDt));
         if (toDt != null) where.and(POST.createdAt.lt(toDt));
         if(memberId != null) where.and(MEMBER.memberId.eq(memberId));
+
+        return where;
+    }
+
+    @Override
+    public Page<PostSummaryDto> search(PostSearchRequestDto cond, Integer memberId, Pageable pageable) {
+        BooleanBuilder where = getCondition(cond, memberId);
 
         List<PostSummaryDto> content = query
                 .select(Projections.constructor(
@@ -73,6 +79,17 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
                 .fetchOne();
 
         return new PageImpl<>(content, pageable, Objects.requireNonNullElse(total, 0L));
+    }
+
+    @Override
+    public Long countByCheckedTrueAndCond(PostSearchRequestDto cond, Integer memberId) {
+        BooleanBuilder where = getCondition(cond, memberId);
+        return query
+                .select(POST.count().coalesce(0L))
+                .from(POST)
+                .join(POST.member, MEMBER)
+                .where(where, POST.isChecked.isTrue())
+                .fetchOne();
     }
 
     @Override

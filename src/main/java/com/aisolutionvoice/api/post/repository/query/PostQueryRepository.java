@@ -18,6 +18,8 @@ import java.util.Optional;
 public interface PostQueryRepository {
     Page<PostSummaryDto> search(PostSearchRequestDto condition, Integer memberId, Pageable pageable);
 
+    Long countByCheckedTrueAndCond(PostSearchRequestDto condition, Integer memberId);
+
     Optional<Long> findPostIdByMemberIdAndBoardId(Integer memberId, Long boardId);
 
     //List<PostFlatRowDto> findPostFlatRows(Long postId);

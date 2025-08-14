@@ -2,13 +2,9 @@ package com.aisolutionvoice.api.post.repository;
 
 import com.aisolutionvoice.api.Board.entity.Board;
 import com.aisolutionvoice.api.member.entity.Member;
-import com.aisolutionvoice.api.post.dto.PostDetailDto;
 import com.aisolutionvoice.api.post.dto.PostFlatRowDto;
-import com.aisolutionvoice.api.post.dto.PostSummaryDto;
 import com.aisolutionvoice.api.post.entity.Post;
 import com.aisolutionvoice.api.post.repository.query.PostQueryRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -38,4 +34,5 @@ public interface PostRepository  extends JpaRepository<Post, Long>, PostQueryRep
     Optional<Post> findByMemberAndBoard(Member member, Board board);
 
     Boolean existsByMemberAndBoard(Member member, Board board);
+    long count();
 }
