@@ -100,14 +100,16 @@ public class PostService {
         }catch(DataIntegrityViolationException e){
             throw new CustomException(ErrorCode.DUPLICATE_POST_EXISTS);
         }catch (Exception e){
+            e.printStackTrace();
             throw new CustomException(ErrorCode.INTERNAL_COMMON_ERROR);
         }
     }
 
     @Transactional
-    public void setChecked(Long id, boolean checked){
+    public boolean setChecked(Long id, boolean checked){
         Post updatePost = postRepository.findById(id)
                 .orElseThrow(()->new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
         updatePost.setChecked(checked);
+        return updatePost.isChecked();
     }
 }

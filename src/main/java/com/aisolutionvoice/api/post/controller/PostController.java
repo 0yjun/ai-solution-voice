@@ -112,13 +112,14 @@ public class PostController {
         return ResponseEntity.ok(Map.of("data","ok"));
     }
 
-    @PatchMapping("/{postId:\\\\d+}/check")
+    @PatchMapping("/{postId:\\d+}/check")
     @PreAuthorize("hasRole(Role.ADMIN)")
-    public ResponseEntity<?> setChecked(
+    public ResponseEntity<Map<String, Boolean>> setChecked(
             @PathVariable Long postId,
-            @RequestBody Boolean isChecked
+            @RequestBody boolean isChecked
     ) {
-        postService.setChecked(postId, isChecked);
-        return ResponseEntity.noContent().build();
+        log.info(String.valueOf(isChecked));
+        boolean isCheckedRes = postService.setChecked(postId, isChecked);
+        return ResponseEntity.ok(Map.of("isChecked", isCheckedRes));
     }
 }
