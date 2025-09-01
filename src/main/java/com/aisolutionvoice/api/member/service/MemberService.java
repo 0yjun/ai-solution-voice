@@ -41,6 +41,7 @@ public class MemberService {
 
         Member member = Member.builder()
                 .loginId(dto.getLoginId())
+                .account(dto.getAccount())
                 .password(encodedPassword)
                 .di(null)
                 .birth(null)

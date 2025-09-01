@@ -19,6 +19,9 @@ public class Member {
     @Column(nullable = false, unique = true, length = 50)
     private String loginId;
 
+    @Column(unique = true, length = 50)
+    private String account;
+
     @Column(nullable = false)
     private String password;
 

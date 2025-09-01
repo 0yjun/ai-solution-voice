@@ -23,6 +23,10 @@ public class SignupRequestDto {
         @NotBlank
         private String loginId;
 
+        @Schema(description = "계정", example = "account1")
+        @NotBlank
+        private String account;
+
         @Schema(description = "비밀번호", example = "securePass123!")
         @NotBlank
         private String password;
