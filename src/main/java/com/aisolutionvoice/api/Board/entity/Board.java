@@ -59,4 +59,9 @@ public class Board {
         scripts.add(script);
         script.setBoard(this);
     }
+
+    public void updateFromDto(com.aisolutionvoice.api.Board.dto.BoardFormDto boardFormDto) {
+        this.name = boardFormDto.getBoardName();
+        this.description = boardFormDto.getDescription();
+    }
 }

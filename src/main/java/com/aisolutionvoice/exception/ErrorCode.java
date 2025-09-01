@@ -30,6 +30,7 @@ public enum ErrorCode {
     INVALID_FILE_PATH(HttpStatus.NOT_FOUND, "FILE003","파일경로가 올바르지 않습니다"),
 
     DUPLICATE_POST_EXISTS(HttpStatus.CONFLICT, "POST001", "게시글이 중복되었습니다"),
+    BOARD_NOT_FOUND(HttpStatus.NOT_FOUND, "BOARD001", "게시판을 찾을 수 없습니다."),
     // 서버오류
     INTERNAL_COMMON_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMN001","서버 내부 오류"),
     RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND, "COMN002","리소스를 찾을 수 없습니다.");

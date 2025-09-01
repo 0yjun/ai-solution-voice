@@ -8,6 +8,7 @@ import com.aisolutionvoice.api.menu.service.MenuService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -21,19 +22,32 @@ import java.util.List;
 @Slf4j
 public class BoardController {
     private  final BoardService boardService;
+
+    @GetMapping
+    public List<BoardFormDto> getBoardList(){
+        return boardService.getList();
+    }
     @GetMapping("/{boardId}/form")
     public BoardFormDto getBoardForm(@PathVariable Long boardId) {
         return boardService.getBoardForm(boardId);
     }
 
-    @PostMapping("/{boardId/scripts")
+    @PostMapping("/{boardId}/scripts")
     public ResponseEntity<?> createOne(
-            @PathVariable Integer boardId,
+            @PathVariable Long boardId,
             @Valid @RequestBody List<Long> reqs
     ) {
         List<Long> processedIds = boardService.addScripts(boardId, reqs);
 
         URI location = URI.create("/api/boards/" + boardId + "/scripts");
         return ResponseEntity.created(location).body(processedIds);
+    }
+
+    @PutMapping("/{boardId}")
+    public ResponseEntity<Void> updateBoard(
+            @PathVariable Long boardId,
+            @Valid @RequestBody BoardFormDto boardFormDto) {
+        boardService.updateBoard(boardId, boardFormDto);
+        return ResponseEntity.noContent().build();
     }
 }

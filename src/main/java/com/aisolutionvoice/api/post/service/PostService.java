@@ -64,7 +64,7 @@ public class PostService {
 
     public Post createPost(PostCreateDto dto, Integer memberId) {
         Member member = memberService.getMemberProxy(memberId);
-        Board board = boardService.getBoardByProxy(1);
+        Board board = boardService.getBoardByProxy(1L);
 
         boolean exists = postRepository.existsByMemberAndBoard(member, board);
         if (exists) {
@@ -88,7 +88,7 @@ public class PostService {
 
     public Post updatePost(PostUpdateDto dto, Integer memberId) {
         Member member = memberService.getMemberProxy(memberId);
-        Board board = boardService.getBoardByProxy(1);
+        Board board = boardService.getBoardByProxy(1L);
         log.info(dto.getMemo());
         log.info(dto.getMemo());
 

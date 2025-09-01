@@ -1,7 +1,6 @@
 package com.aisolutionvoice.api.Board.dto;
 
 import com.aisolutionvoice.api.HotwordScript.dto.HotwordScriptDto;
-import com.aisolutionvoice.api.HotwordScript.entity.HotwordScript;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

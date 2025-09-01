@@ -21,7 +21,8 @@ values
     -- 부모메뉴
     ('DashBoard', 'DashBoard','/',1,'mdi-view-dashboard','USER',true, null),
 
-    ('호출어등록화면', '호출어등록화면','/board',3,'mdi-lan-connect','USER',true, null);
+    ('호출어등록용게시판1', '호출어등록용게시판1','/post',3,'mdi-lan-connect','USER',true, null);
+    --('게시판 등록 화면', '게시판 등록 화면','/board',3,'mdi-lan-connect','USER',true, null);
 
 -- 게시글
 insert into BOARD(ID, NAME, DESCRIPTION, DELETED  )

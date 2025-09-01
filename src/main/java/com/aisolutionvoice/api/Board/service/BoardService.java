@@ -14,7 +14,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,8 +27,30 @@ public class BoardService {
     private final ModelMapper modelMapper;
 
 
-    public Board getBoardByProxy(Integer boardId){
+    public Board getBoardByProxy(Long boardId){
         return boardRepository.getReferenceById(boardId);
+    }
+
+    // 공통 변환 메서드
+    private BoardFormDto toBoardFormDto(Board board) {
+        List<HotwordScriptDto> scripts = board.getScripts().stream()
+                .sorted(Comparator.comparing(HotwordScript::getScriptId)) // 필요 시 정렬
+                .map(s -> modelMapper.map(s, HotwordScriptDto.class))
+                .toList();
+
+        return new BoardFormDto(
+                board.getId(),
+                board.getName(),
+                board.getDescription(),
+                scripts
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public List<BoardFormDto> getList() {
+        // N+1 방지: fetch join 또는 EntityGraph 권장 (아래 패턴 참고)
+        List<Board> boards = boardRepository.findAllWithScripts();
+        return boards.stream().map(this::toBoardFormDto).toList();
     }
 
     @Transactional(readOnly = true)
@@ -50,7 +74,7 @@ public class BoardService {
     }
 
     @Transactional
-    public List<Long> addScripts(Integer boardId, List<Long> ids) {
+    public List<Long> addScripts(Long boardId, List<Long> ids) {
         if (ids == null || ids.isEmpty()) {
             throw new CustomException(ErrorCode.VALIDATION_ERROR);
         }
@@ -73,5 +97,13 @@ public class BoardService {
         return scripts.stream()
                 .map(HotwordScript::getScriptId)
                 .toList();
+    }
+
+    @Transactional
+    public void updateBoard(Long boardId, BoardFormDto boardFormDto) {
+        Board board = boardRepository.findBoardById(boardId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
+        board.updateFromDto(boardFormDto);
+        boardRepository.save(board);
     }
 }
