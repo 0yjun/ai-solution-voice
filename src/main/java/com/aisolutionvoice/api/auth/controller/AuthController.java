@@ -51,9 +51,7 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginRequestDto dto, HttpServletRequest request, HttpServletResponse response) {
         UsernamePasswordAuthenticationToken token =
                 new UsernamePasswordAuthenticationToken(dto.getLoginId(), dto.getPassword());
-        System.out.println(token);
         Authentication auth = authenticationManager.authenticate(token); // ⬅️ 이때 MemberDetailsService 호출됨
-        System.out.println(auth);
         // SecurityContext 생성
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(auth);

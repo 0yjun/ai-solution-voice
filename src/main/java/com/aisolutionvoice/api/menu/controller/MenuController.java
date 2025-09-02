@@ -28,8 +28,6 @@ public class MenuController {
         String roleString = authentication
                 .getAuthorities().iterator().next().getAuthority()
                 .replaceFirst("ROLE_","");
-        System.out.println(roleString);
-        System.out.println(Role.values());
         Role userRole = Role.valueOf(roleString);
 
         // 3) 서비스 호출 (단일 Role 전달)
