@@ -5,6 +5,7 @@ import com.aisolutionvoice.api.HotwordScript.dto.HotwordScriptDto;
 import com.aisolutionvoice.api.HotwordScript.entity.HotwordScript;
 import com.aisolutionvoice.api.HotwordScript.service.HotwordScriptService;
 import jakarta.annotation.Nullable;
+import com.aisolutionvoice.api.HotwordScript.dto.UpdateBoardScriptsRequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -63,5 +64,14 @@ public class HotwordScriptController {
     public ResponseEntity<List<HotwordScriptDto>> getUnassignedHotwordScripts() {
         List<HotwordScriptDto> scripts = hotwordScriptService.getUnassignedHotwordScripts();
         return ResponseEntity.ok(scripts);
+    }
+
+    // 게시판 스크립트 목록 전체 교체 (추가/삭제/순서 변경)
+    @PutMapping("/boards/{boardId}/hotword-scripts")
+    public ResponseEntity<Void> updateBoardScripts(
+            @PathVariable Long boardId,
+            @Valid @RequestBody UpdateBoardScriptsRequestDto requestDto) {
+        hotwordScriptService.updateBoardScripts(boardId, requestDto.getScriptIds());
+        return ResponseEntity.noContent().build();
     }
 }

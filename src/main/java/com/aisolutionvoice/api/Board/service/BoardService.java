@@ -43,7 +43,8 @@ public class BoardService {
                 board.getId(),
                 board.getName(),
                 board.getDescription(),
-                scripts
+                scripts,
+                false
         );
     }
 
@@ -70,7 +71,8 @@ public class BoardService {
                 board.getId(),
                 board.getName(),
                 board.getDescription(),
-                scripts
+                scripts,
+                false
         );
     }
 

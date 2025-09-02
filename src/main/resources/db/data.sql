@@ -35,5 +35,9 @@ VALUES
     ('헤이 마루, 음악 틀어줘',1),
     ('마루야 창문 열어',1),
     ('시리야 날씨 알려줘',1),
-    ('마루야 다음 곡 재생',1);
+    ('마루야 다음 곡 재생',1),
+    ('unsigned1',null),
+    ('unsigned2',null),
+    ('unsigned3',null),
+    ('unsigned4',null);
 

@@ -48,7 +48,7 @@ public class Board {
     @Column(nullable = false)
     private boolean deleted = false;
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     @Builder.Default
     private List<HotwordScript> scripts = new ArrayList<>();
 

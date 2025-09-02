@@ -32,6 +32,9 @@ public class AdminBoardDto {
     @Schema(description = "최종 수정일")
     private LocalDateTime updatedAt;
 
+    @Schema(description = "스크립트 수정 가능 여부", example = "true")
+    private boolean canEditScript;
+
     public static AdminBoardDto fromEntity(Board board) {
         return new AdminBoardDto(
                 board.getId(),
@@ -39,7 +42,8 @@ public class AdminBoardDto {
                 board.getDescription(),
                 !board.isDeleted(), // 'deleted'의 반대 값으로 'activated' 설정
                 board.getCreatedAt(),
-                board.getUpdatedAt()
+                board.getUpdatedAt(),
+                board.getPosts().isEmpty() // canEditScript 설정
         );
     }
 }
