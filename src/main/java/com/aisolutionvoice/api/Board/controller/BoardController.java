@@ -1,10 +1,13 @@
 package com.aisolutionvoice.api.Board.controller;
 
+import com.aisolutionvoice.api.Board.dto.AdminBoardDto;
+import com.aisolutionvoice.api.Board.dto.BoardCreateRequestDto;
 import com.aisolutionvoice.api.Board.dto.BoardFormDto;
 import com.aisolutionvoice.api.Board.service.BoardService;
 import com.aisolutionvoice.api.Role.domain.Role;
 import com.aisolutionvoice.api.menu.dto.MenuClientDto;
 import com.aisolutionvoice.api.menu.service.MenuService;
+import com.aisolutionvoice.api.Board.dto.BoardStatusUpdateRequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +30,12 @@ public class BoardController {
     public List<BoardFormDto> getBoardList(){
         return boardService.getList();
     }
+
+    // TODO: "/admin" 경로는 Spring Security를 통해 ADMIN 권한을 가진 사용자만 접근하도록 제한해야 합니다.
+    @GetMapping("/admin")
+    public ResponseEntity<List<AdminBoardDto>> getAdminBoardList() {
+        return ResponseEntity.ok(boardService.getAdminBoardList());
+    }
     @GetMapping("/{boardId}/form")
     public BoardFormDto getBoardForm(@PathVariable Long boardId) {
         return boardService.getBoardForm(boardId);
@@ -48,6 +57,21 @@ public class BoardController {
             @PathVariable Long boardId,
             @Valid @RequestBody BoardFormDto boardFormDto) {
         boardService.updateBoard(boardId, boardFormDto);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping
+    public ResponseEntity<BoardFormDto> createBoard(@Valid @RequestBody BoardCreateRequestDto requestDto) {
+        BoardFormDto createdBoard = boardService.createBoard(requestDto);
+        URI location = URI.create("/api/boards/" + createdBoard.getBoardId());
+        return ResponseEntity.created(location).body(createdBoard);
+    }
+
+    @PutMapping("/{boardId}/status")
+    public ResponseEntity<Void> updateBoardStatus(
+            @PathVariable Long boardId,
+            @Valid @RequestBody BoardStatusUpdateRequestDto requestDto) {
+        boardService.updateBoardStatus(boardId, requestDto.getActivated());
         return ResponseEntity.noContent().build();
     }
 }

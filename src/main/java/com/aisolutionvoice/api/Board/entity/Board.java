@@ -35,6 +35,7 @@ public class Board {
 
     // 게시글 목록 (사용자 참여)
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<Post> posts = new ArrayList<>();
 
     @CreationTimestamp
@@ -48,6 +49,7 @@ public class Board {
     private boolean deleted = false;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<HotwordScript> scripts = new ArrayList<>();
 
     public void addPost(Post post) {
@@ -63,5 +65,9 @@ public class Board {
     public void updateFromDto(com.aisolutionvoice.api.Board.dto.BoardFormDto boardFormDto) {
         this.name = boardFormDto.getBoardName();
         this.description = boardFormDto.getDescription();
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

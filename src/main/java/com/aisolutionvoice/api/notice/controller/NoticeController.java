@@ -7,6 +7,8 @@ import com.aisolutionvoice.api.notice.service.NoticeService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/notice")
+@RequestMapping("/api/notices")
 @RequiredArgsConstructor
 @Tag(name = "Notice", description = "공지사항 API")
 public class NoticeController {
@@ -30,8 +32,8 @@ public class NoticeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<NoticeListResponseDto>> getAllNotices() {
-        List<NoticeListResponseDto> responseDtos = noticeService.findAllNotices();
+    public ResponseEntity<Page<NoticeListResponseDto>> getAllNotices(Pageable pageable) {
+        Page<NoticeListResponseDto> responseDtos = noticeService.findAllNotices(pageable);
         return ResponseEntity.ok(responseDtos);
     }
 

@@ -8,6 +8,8 @@ import com.aisolutionvoice.api.notice.repository.NoticeRepository;
 import com.aisolutionvoice.exception.CustomException;
 import com.aisolutionvoice.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,10 +34,9 @@ public class NoticeService {
         return NoticeResponseDto.from(savedNotice);
     }
 
-    public List<NoticeListResponseDto> findAllNotices() {
-        return noticeRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt")).stream()
-                .map(NoticeListResponseDto::from)
-                .collect(Collectors.toList());
+    public Page<NoticeListResponseDto> findAllNotices(Pageable pageable) {
+        return noticeRepository.findAll(pageable)
+                .map(NoticeListResponseDto::from);
     }
 
     public NoticeResponseDto findNoticeById(Long noticeId) {

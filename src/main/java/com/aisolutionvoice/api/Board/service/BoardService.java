@@ -1,12 +1,13 @@
 package com.aisolutionvoice.api.Board.service;
 
+import com.aisolutionvoice.api.Board.dto.AdminBoardDto;
+import com.aisolutionvoice.api.Board.dto.BoardCreateRequestDto;
 import com.aisolutionvoice.api.Board.dto.BoardFormDto;
 import com.aisolutionvoice.api.Board.entity.Board;
 import com.aisolutionvoice.api.Board.repository.BoardRepository;
 import com.aisolutionvoice.api.HotwordScript.dto.HotwordScriptDto;
 import com.aisolutionvoice.api.HotwordScript.entity.HotwordScript;
 import com.aisolutionvoice.api.HotwordScript.repository.HotwordScriptRepository;
-import com.aisolutionvoice.api.member.entity.Member;
 import com.aisolutionvoice.exception.CustomException;
 import com.aisolutionvoice.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -105,5 +106,34 @@ public class BoardService {
                 .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
         board.updateFromDto(boardFormDto);
         boardRepository.save(board);
+    }
+
+    @Transactional
+    public BoardFormDto createBoard(BoardCreateRequestDto requestDto) {
+        Board board = Board.builder()
+                .name(requestDto.getBoardName())
+                .description(requestDto.getDescription())
+                .build();
+
+        Board savedBoard = boardRepository.save(board);
+        return toBoardFormDto(savedBoard);
+    }
+
+    @Transactional
+    public void updateBoardStatus(Long boardId, Boolean activated) {
+        Board board = boardRepository.findBoardById(boardId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
+
+        board.setDeleted(!activated);
+        boardRepository.save(board);
+    }
+
+    @Transactional(readOnly = true)
+    public List<AdminBoardDto> getAdminBoardList() {
+        // deleted 상태와 상관없이 모든 Board를 조회합니다.
+        List<Board> allBoards = boardRepository.findAll();
+        return allBoards.stream()
+                .map(AdminBoardDto::fromEntity)
+                .collect(Collectors.toList());
     }
 }

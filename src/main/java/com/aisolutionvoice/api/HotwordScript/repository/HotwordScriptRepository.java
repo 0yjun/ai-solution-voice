@@ -22,4 +22,6 @@ public interface HotwordScriptRepository extends JpaRepository<HotwordScript, Lo
         where s.scriptId in :ids
     """)
     void attachScripts(@Param("board") Board board, @Param("ids") List<Long> ids);
+
+    List<HotwordScript> findByBoardIsNull();
 }
