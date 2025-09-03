@@ -56,6 +56,7 @@ public class PostService {
                 .author(postSummary.getWriterLoginId())
                 .createdAt(postSummary.getCreateAt()) // 바로 String을 사용
                 .viewCount(null) // PostSummaryDto에 조회수 정보가 없으므로 null
+                .isChecked(postSummary.isChecked())
                 .build();
     }
 
