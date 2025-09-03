@@ -4,6 +4,7 @@ import com.aisolutionvoice.api.Board.entity.Board;
 import com.aisolutionvoice.api.Board.service.BoardService;
 import com.aisolutionvoice.api.member.entity.Member;
 import com.aisolutionvoice.api.member.service.MemberService;
+import com.aisolutionvoice.api.notice.service.NoticeService;
 import com.aisolutionvoice.api.post.dto.*;
 import com.aisolutionvoice.api.post.entity.Post;
 import com.aisolutionvoice.api.post.repository.PostRepository;
@@ -12,7 +13,6 @@ import com.aisolutionvoice.exception.CustomException;
 import com.aisolutionvoice.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -32,6 +33,31 @@ public class PostService {
     private final MemberService memberService;
     private  final BoardService boardService;
     private final VoiceDataService voiceDataService;
+    private final NoticeService noticeService;
+
+
+    public BoardPageDto getSearchAndNotice(PostSearchRequestDto requestDto, Integer memberId, Pageable pageable){
+        // 1. 일반 게시글 검색 및 PostItemDto로 변환
+        Page<PostItemDto> postsPage = getSearch(requestDto, memberId, pageable)
+                .map(this::convertPostSummaryToPostItem);
+
+        // 2. 공지사항 목록 조회 (첫 페이지일 때만)
+        List<PostItemDto> noticeDtos = noticeService.findNoticesForFirstPage(requestDto.getBoardId(), pageable);
+
+        // 3. BoardPageDto 객체로 감싸서 반환
+        return new BoardPageDto(noticeDtos, postsPage);
+    }
+
+    private PostItemDto convertPostSummaryToPostItem(PostSummaryDto postSummary) {
+        return PostItemDto.builder()
+                .id(postSummary.getPostId())
+                .type(PostType.POST)
+                .title(postSummary.getTitle())
+                .author(postSummary.getWriterLoginId())
+                .createdAt(LocalDateTime.parse(postSummary.getCreateAt()))
+                .viewCount(null) // PostSummaryDto에 조회수 정보가 없으므로 null
+                .build();
+    }
 
 
     public Page<PostSummaryDto> getSearch(PostSearchRequestDto requestDto, Integer memberId, Pageable pageable) {

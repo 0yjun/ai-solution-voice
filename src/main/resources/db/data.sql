@@ -19,11 +19,10 @@ VALUES
 INSERT INTO MENU (name, description, url, seq, icon, roles, is_active,parent_id)
 values
     -- 부모메뉴
-    ('DashBoard', 'DashBoard','/',1,'mdi-view-dashboard','USER, ADMIN',true, null),
-
     ('호출어등록용게시판1', '호출어등록용게시판1','/post',2,'mdi-lan-connect','USER, ADMIN',true, null),
     ('시스템설정', '시스템설정','',3,'mdi-lan-connect','ADMIN',true, null),
-    ('게시판 등록 화면', '게시판 등록 화면','/board',3,'mdi-lan-connect','ADMIN',true, 3);
+    ('게시판 등록 화면', '게시판 등록 화면','/board',3,'mdi-lan-connect','ADMIN',true, 3),
+    ('공지', '공지','/notice',3,'mdi-lan-connect','ADMIN',true, 3);
 
 -- 게시글
 insert into BOARD(ID, NAME, DESCRIPTION, DELETED  )

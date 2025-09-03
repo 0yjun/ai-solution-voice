@@ -27,7 +27,7 @@ public class Board {
     private Long id;
 
     // 게시판 이름 (ex. "차량 호출어 수집")
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     // 게시판 설명 (선택)

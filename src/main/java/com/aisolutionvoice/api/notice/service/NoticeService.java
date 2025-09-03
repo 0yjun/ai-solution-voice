@@ -7,6 +7,8 @@ import com.aisolutionvoice.api.notice.dto.NoticeRequestDto;
 import com.aisolutionvoice.api.notice.dto.NoticeResponseDto;
 import com.aisolutionvoice.api.notice.entity.Notice;
 import com.aisolutionvoice.api.notice.repository.NoticeRepository;
+import com.aisolutionvoice.api.post.dto.PostItemDto;
+import com.aisolutionvoice.api.post.dto.PostType;
 import com.aisolutionvoice.exception.CustomException;
 import com.aisolutionvoice.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -69,5 +75,25 @@ public class NoticeService {
     @Transactional
     public void deleteNotice(Long noticeId) {
         noticeRepository.deleteById(noticeId);
+    }
+
+    public List<PostItemDto> findNoticesForFirstPage(Long boardId, Pageable pageable){
+        if(pageable.getPageNumber() == 0){
+            return noticeRepository.findNoticesForBoard(boardId).stream()
+                    .map(this::convertNoticeToBoardItemDto)
+                    .collect(Collectors.toList());
+        }
+        return Collections.emptyList();
+    }
+
+    private PostItemDto convertNoticeToBoardItemDto(Notice notice) {
+        return PostItemDto.builder()
+                .id(notice.getId())
+                .type(PostType.NOTICE)
+                .title(notice.getTitle())
+                .author("관리자") // 공지사항 작성자는 '관리자'로 고정
+                .createdAt(notice.getCreatedAt())
+                .viewCount(null) // 공지사항은 조회수 필드가 없으므로 null
+                .build();
     }
 }
