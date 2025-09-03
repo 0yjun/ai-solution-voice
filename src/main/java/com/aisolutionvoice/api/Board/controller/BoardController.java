@@ -35,6 +35,12 @@ public class BoardController {
         return ResponseEntity.ok(boardOptions);
     }
 
+    @GetMapping("/active-options")
+    public ResponseEntity<List<SelectOptionDto>> getActiveBoardOptions() {
+        List<SelectOptionDto> activeBoardOptions = boardService.getActiveBoardsForSelection();
+        return ResponseEntity.ok(activeBoardOptions);
+    }
+
     // TODO: "/admin" 경로는 Spring Security를 통해 ADMIN 권한을 가진 사용자만 접근하도록 제한해야 합니다.
     @GetMapping("/admin")
     public ResponseEntity<List<AdminBoardDto>> getAdminBoardList() {

@@ -13,7 +13,9 @@ import java.util.Optional;
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
 
-    Optional<Board> findBoardById(@Param("boardId") Long boardId);
+    Optional<Board> findBoardById(Long boardId);
+
+    Optional<Board> findByIdAndDeletedFalse(Long id);
 
     @Query("""
         select distinct b
@@ -29,4 +31,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
         where b.id = :id
     """)
     Optional<Board> findByIdWithScripts(@Param("id") Long id);
+
+    List<Board> findByDeletedFalse();
 }

@@ -58,8 +58,8 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public BoardFormDto getBoardForm(Long boardId) {
-        Board board = boardRepository.findBoardById(boardId)
-                .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_COMMON_ERROR));
+        Board board = boardRepository.findByIdAndDeletedFalse(boardId)
+                .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
 
         List<HotwordScriptDto> scripts = board.getScripts().stream()
                 //.filter(script -> script.getScriptId()==1)
@@ -142,6 +142,12 @@ public class BoardService {
 
     public List<SelectOptionDto> getBoardsForSelection() {
         return boardRepository.findAll().stream()
+                .map(board -> new SelectOptionDto(board.getId(), board.getName()))
+                .collect(Collectors.toList());
+    }
+
+    public List<SelectOptionDto> getActiveBoardsForSelection() {
+        return boardRepository.findByDeletedFalse().stream()
                 .map(board -> new SelectOptionDto(board.getId(), board.getName()))
                 .collect(Collectors.toList());
     }
