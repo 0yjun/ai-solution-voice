@@ -33,7 +33,7 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping
-    public ResponseEntity<Page<PostSummaryDto>> getPost(
+    public ResponseEntity<BoardPageDto> getPost(
             PostSearchRequestDto searchRequest,
             Pageable pageable,
             @AuthenticationPrincipal CustomMemberDetails customMemberDetails
@@ -42,7 +42,7 @@ public class PostController {
         if(Boolean.TRUE.equals(searchRequest.getOnlyMyPosts())){
             memberId = customMemberDetails.getUserId();
         }
-        Page<PostSummaryDto> postSummaryDtoPage = postService.getSearch(searchRequest, memberId ,pageable);
+        BoardPageDto postSummaryDtoPage = postService.getSearchAndNotice(searchRequest, memberId, pageable);
         return ResponseEntity.ok(postSummaryDtoPage);
     }
 

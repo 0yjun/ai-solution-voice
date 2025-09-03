@@ -54,7 +54,7 @@ public class PostService {
                 .type(PostType.POST)
                 .title(postSummary.getTitle())
                 .author(postSummary.getWriterLoginId())
-                .createdAt(LocalDateTime.parse(postSummary.getCreateAt()))
+                .createdAt(postSummary.getCreateAt()) // 바로 String을 사용
                 .viewCount(null) // PostSummaryDto에 조회수 정보가 없으므로 null
                 .build();
     }
