@@ -62,7 +62,7 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(DataIntegrityViolationException e) {
-        ErrorResponse response = new ErrorResponse("DUPLICATE_RESOURCE", "이미 등록된 정보입니다.");
+        e.printStackTrace();
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(new ErrorResponse(ErrorCode.INTERNAL_COMMON_ERROR));

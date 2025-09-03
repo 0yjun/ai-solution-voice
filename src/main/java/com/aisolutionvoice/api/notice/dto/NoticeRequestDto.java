@@ -15,4 +15,6 @@ public class NoticeRequestDto {
 
     @NotBlank
     private String content;
+
+    private Long boardId;
 }

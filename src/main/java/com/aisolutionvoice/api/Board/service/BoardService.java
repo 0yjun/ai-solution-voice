@@ -8,6 +8,7 @@ import com.aisolutionvoice.api.Board.repository.BoardRepository;
 import com.aisolutionvoice.api.HotwordScript.dto.HotwordScriptDto;
 import com.aisolutionvoice.api.HotwordScript.entity.HotwordScript;
 import com.aisolutionvoice.api.HotwordScript.repository.HotwordScriptRepository;
+import com.aisolutionvoice.common.dto.SelectOptionDto;
 import com.aisolutionvoice.exception.CustomException;
 import com.aisolutionvoice.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -136,6 +137,12 @@ public class BoardService {
         List<Board> allBoards = boardRepository.findAll();
         return allBoards.stream()
                 .map(AdminBoardDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    public List<SelectOptionDto> getBoardsForSelection() {
+        return boardRepository.findAll().stream()
+                .map(board -> new SelectOptionDto(board.getId(), board.getName()))
                 .collect(Collectors.toList());
     }
 }

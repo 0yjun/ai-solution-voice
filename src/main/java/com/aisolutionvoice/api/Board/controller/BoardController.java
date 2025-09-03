@@ -3,17 +3,14 @@ package com.aisolutionvoice.api.Board.controller;
 import com.aisolutionvoice.api.Board.dto.AdminBoardDto;
 import com.aisolutionvoice.api.Board.dto.BoardCreateRequestDto;
 import com.aisolutionvoice.api.Board.dto.BoardFormDto;
-import com.aisolutionvoice.api.Board.service.BoardService;
-import com.aisolutionvoice.api.Role.domain.Role;
-import com.aisolutionvoice.api.menu.dto.MenuClientDto;
-import com.aisolutionvoice.api.menu.service.MenuService;
 import com.aisolutionvoice.api.Board.dto.BoardStatusUpdateRequestDto;
+import com.aisolutionvoice.api.Board.service.BoardService;
+import com.aisolutionvoice.common.dto.SelectOptionDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -29,6 +26,13 @@ public class BoardController {
     @GetMapping
     public List<BoardFormDto> getBoardList(){
         return boardService.getList();
+    }
+
+    @GetMapping("/options")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<SelectOptionDto>> getBoardOptions() {
+        List<SelectOptionDto> boardOptions = boardService.getBoardsForSelection();
+        return ResponseEntity.ok(boardOptions);
     }
 
     // TODO: "/admin" 경로는 Spring Security를 통해 ADMIN 권한을 가진 사용자만 접근하도록 제한해야 합니다.
