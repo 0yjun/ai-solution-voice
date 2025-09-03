@@ -96,14 +96,14 @@ public class PostService {
     }
 
     @Transactional
-    public void createPostWithVoiceFiles(PostCreateDto dto, Map<String, MultipartFile> files,Integer memberId) {
-        Post post = createPost(dto, memberId);
+    public void createPostWithVoiceFiles(PostCreateDto dto, Map<String, MultipartFile> files,Integer memberId, Long boardId) {
+        Post post = createPost(dto, memberId, boardId);
         voiceDataService.createVoiceDataList(post,files);
     }
 
-    public Post createPost(PostCreateDto dto, Integer memberId) {
+    public Post createPost(PostCreateDto dto, Integer memberId, Long boardId) {
         Member member = memberService.getMemberProxy(memberId);
-        Board board = boardService.getBoardByProxy(1L);
+        Board board = boardService.getBoardByProxy(boardId);
 
         boolean exists = postRepository.existsByMemberAndBoard(member, board);
         if (exists) {

@@ -1,16 +1,11 @@
 package com.aisolutionvoice.api.post.controller;
 
-import com.aisolutionvoice.api.Role.domain.Role;
 import com.aisolutionvoice.api.post.dto.*;
 import com.aisolutionvoice.api.post.service.PostService;
-import com.aisolutionvoice.exception.CustomException;
-import com.aisolutionvoice.exception.ErrorCode;
 import com.aisolutionvoice.security.model.CustomMemberDetails;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -84,7 +77,7 @@ public class PostController {
             @AuthenticationPrincipal CustomMemberDetails customMemberDetails
     ) {
         Integer memberId = customMemberDetails.getUserId();
-        postService.createPostWithVoiceFiles(dto, files, memberId);
+        postService.createPostWithVoiceFiles(dto, files, memberId, 1L);
 
         return ResponseEntity.ok(Map.of("data","ok"));
     }
