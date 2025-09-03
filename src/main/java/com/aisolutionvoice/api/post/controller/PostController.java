@@ -47,27 +47,16 @@ public class PostController {
     }
 
     @GetMapping("/stat")
-    public ResponseEntity<?> getPostStat(
+    public ResponseEntity<PostStatDto> getPostStat(
             PostSearchRequestDto searchRequest,
-            @AuthenticationPrincipal CustomMemberDetails customMemberDetails,
-            Pageable pageable
+            @AuthenticationPrincipal CustomMemberDetails customMemberDetails
     ) {
         Integer memberId = null;
         if(Boolean.TRUE.equals(searchRequest.getOnlyMyPosts())){
             memberId = customMemberDetails.getUserId();
         }
-        Page<PostSummaryDto> page = postService.getSearch(searchRequest, memberId, pageable);
-
-        long checkedCount = postService.countCheckedPosts(searchRequest, memberId); // 같은 필터
-        long totalCnt   = page.getTotalElements();
-        double progress = (totalCnt == 0) ? 0.0 : (double) checkedCount / totalCnt;
-
-        return ResponseEntity.ok(
-                Map.of("checkedCount", checkedCount,
-                        "totalCount", totalCnt,
-                        "progress", progress
-                        )
-        );
+        PostStatDto stats = postService.getPostStats(searchRequest, memberId);
+        return ResponseEntity.ok(stats);
     }
 
     @GetMapping("/{postId}")

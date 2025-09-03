@@ -73,6 +73,19 @@ public class PostService {
         return postRepository.count();
     }
 
+    @Transactional(readOnly = true)
+    public PostStatDto getPostStats(PostSearchRequestDto requestDto, Integer memberId) {
+        long checkedCount = countCheckedPosts(requestDto, memberId);
+        long totalCount = getSearch(requestDto, memberId, Pageable.unpaged()).getTotalElements();
+
+        if (totalCount == 0) {
+            return new PostStatDto(0.0);
+        }
+
+        double progress = ((double) checkedCount / totalCount) * 100.0;
+        return new PostStatDto(progress);
+    }
+
     public PostDetailDto getByPostId(Long postId){
         List<PostFlatRowDto>  flatRowDtoList =  postRepository.findPostFlatRows(postId);
         return PostDetailDto.fromFlatRows(flatRowDtoList);
