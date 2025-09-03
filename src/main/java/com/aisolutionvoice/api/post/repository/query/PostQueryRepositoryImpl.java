@@ -81,7 +81,7 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
         return new PageImpl<>(content, pageable, Objects.requireNonNullElse(total, 0L));
     }
 
-    @Override
+        @Override
     public Long countByCheckedTrueAndCond(PostSearchRequestDto cond, Integer memberId) {
         BooleanBuilder where = getCondition(cond, memberId);
         return query
@@ -90,6 +90,19 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
                 .join(POST.member, MEMBER)
                 .where(where, POST.isChecked.isTrue())
                 .fetchOne();
+    }
+
+    @Override
+    public long countBySearch(PostSearchRequestDto cond, Integer memberId) {
+        BooleanBuilder where = getCondition(cond, memberId);
+
+        Long total = query
+                .select(POST.count().coalesce(0L))
+                .from(POST)
+                .join(POST.member, MEMBER)
+                .where(where)
+                .fetchOne();
+        return Objects.requireNonNullElse(total, 0L);
     }
 
     @Override

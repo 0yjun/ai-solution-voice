@@ -76,14 +76,14 @@ public class PostService {
     @Transactional(readOnly = true)
     public PostStatDto getPostStats(PostSearchRequestDto requestDto, Integer memberId) {
         long checkedCount = countCheckedPosts(requestDto, memberId);
-        long totalCount = getSearch(requestDto, memberId, Pageable.unpaged()).getTotalElements();
+        long totalCount = postRepository.countBySearch(requestDto, memberId);
 
         if (totalCount == 0) {
-            return new PostStatDto(0.0);
+            return new PostStatDto(0L, 0L, 0.0);
         }
 
         double progress = ((double) checkedCount / totalCount) * 100.0;
-        return new PostStatDto(progress);
+        return new PostStatDto(totalCount, checkedCount, progress);
     }
 
     public PostDetailDto getByPostId(Long postId){

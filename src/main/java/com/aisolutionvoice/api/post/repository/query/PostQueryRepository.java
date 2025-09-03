@@ -22,5 +22,8 @@ public interface PostQueryRepository {
 
     Optional<Long> findPostIdByMemberIdAndBoardId(Integer memberId, Long boardId);
 
+    long countBySearch(PostSearchRequestDto condition, Integer memberId);
+
     //List<PostFlatRowDto> findPostFlatRows(Long postId);
 }
+
