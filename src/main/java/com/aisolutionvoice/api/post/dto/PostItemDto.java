@@ -3,8 +3,6 @@ package com.aisolutionvoice.api.post.dto;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-
 @Getter
 public class PostItemDto {
     private final Long id;
