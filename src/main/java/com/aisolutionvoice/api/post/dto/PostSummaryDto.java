@@ -40,7 +40,7 @@ public class PostSummaryDto {
         this.postId = postId;
         this.title = title;
         this.writerLoginId = loginId;
-        this.createAt = createAt.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        this.createAt = createAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         this.isChecked = isChecked;
     }
 
