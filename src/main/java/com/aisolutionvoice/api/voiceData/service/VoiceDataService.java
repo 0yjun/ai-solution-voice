@@ -77,7 +77,11 @@ public class VoiceDataService {
 
             String relativePath =
                     filePathGenerator.generateVoiceDataPath(post.getBoard().getId(), post.getId(), scriptId);
-
+            log.info("script.getScriptId()"+script.getScriptId());
+            voiceDataRepository.findAll().stream().forEach(i->{
+                log.info(i.toString());
+                log.info(i.getId().toString());
+            });
             VoiceData voiceData = voiceDataRepository.findById(script.getScriptId())
                     .orElseThrow(()->new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
 

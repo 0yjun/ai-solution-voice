@@ -66,7 +66,12 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOriginPatterns(List.of("http://localhost:3000"));
+        config.setAllowedOriginPatterns(List.of(
+                "https://localhost:3000",
+                "http://localhost:3000",
+                "https://www.tns-data.works",
+                "https://tns-data.works"
+        ));
         config.setAllowedMethods(List.of("GET", "POST","PATCH", "PUT", "DELETE"));
         config.setAllowedHeaders(List.of("*"));
 

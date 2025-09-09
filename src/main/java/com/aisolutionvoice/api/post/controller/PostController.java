@@ -95,7 +95,7 @@ public class PostController {
             @AuthenticationPrincipal CustomMemberDetails customMemberDetails
     ) {
         Integer memberId = customMemberDetails.getUserId();
-        postService.updatePostWithVoiceFiles(dto, files, memberId);
+        postService.updatePostWithVoiceFiles(dto, files, memberId, boardId);
 
         return ResponseEntity.ok(Map.of("data","ok"));
     }

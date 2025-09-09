@@ -121,16 +121,16 @@ public class PostService {
     }
 
     @Transactional
-    public void updatePostWithVoiceFiles(PostUpdateDto dto, Map<String, MultipartFile> files, Integer memberId) {
-        Post post = updatePost(dto, memberId);
+    public void updatePostWithVoiceFiles(
+            PostUpdateDto dto, Map<String, MultipartFile> files, Integer memberId, Long boardId
+    ) {
+        Post post = updatePost(dto, memberId, boardId);
         voiceDataService.updateVoiceDataList(post,files);
     }
 
-    public Post updatePost(PostUpdateDto dto, Integer memberId) {
+    public Post updatePost(PostUpdateDto dto, Integer memberId, Long boardId) {
         Member member = memberService.getMemberProxy(memberId);
-        Board board = boardService.getBoardByProxy(1L);
-        log.info(dto.getMemo());
-        log.info(dto.getMemo());
+        Board board = boardService.getBoardByProxy(boardId);
 
         try{
             Post updatePost = postRepository.findByMemberAndBoard(member, board)
