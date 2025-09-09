@@ -74,4 +74,10 @@ public class HotwordScriptController {
         hotwordScriptService.updateBoardScripts(boardId, requestDto.getScriptIds());
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/hotword-script/{scriptId}")
+    public ResponseEntity<Void> deleteHotwordScript(@PathVariable Long scriptId) {
+        hotwordScriptService.deleteScript(scriptId);
+        return ResponseEntity.noContent().build();
+    }
 }

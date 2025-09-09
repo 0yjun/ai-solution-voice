@@ -33,6 +33,7 @@ public enum ErrorCode {
     BOARD_NOT_FOUND(HttpStatus.NOT_FOUND, "BOARD001", "게시판을 찾을 수 없습니다."),
     BOARD_HAS_POSTS_CANNOT_MODIFY_SCRIPTS(HttpStatus.BAD_REQUEST, "BOARD002", "게시글이 존재하는 게시판의 스크립트는 수정할 수 없습니다."),
     HOTWORD_SCRIPT_NOT_FOUND(HttpStatus.NOT_FOUND, "HS001", "요청한 호출어 스크립트를 찾을 수 없습니다."),
+    HOTWORD_SCRIPT_IS_ASSIGNED(HttpStatus.BAD_REQUEST, "HS002", "이미 게시판에 할당된 스크립트는 삭제할 수 없습니다."),
     // 서버오류
     INTERNAL_COMMON_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMN001","서버 내부 오류"),
     RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND, "COMN002","리소스를 찾을 수 없습니다.");

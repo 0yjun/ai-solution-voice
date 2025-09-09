@@ -129,4 +129,17 @@ public class HotwordScriptService {
         }
         boardRepository.save(board); // 변경사항 저장
     }
+
+    @Transactional
+    public void deleteScript(Long scriptId) {
+        HotwordScript script = hotwordScriptRepository.findById(scriptId)
+            .orElseThrow(() -> new CustomException(ErrorCode.HOTWORD_SCRIPT_NOT_FOUND));
+
+        // Check if the script is assigned to any board
+        if (script.getBoard() != null) {
+            throw new CustomException(ErrorCode.HOTWORD_SCRIPT_IS_ASSIGNED);
+        }
+
+        hotwordScriptRepository.delete(script);
+    }
 }
