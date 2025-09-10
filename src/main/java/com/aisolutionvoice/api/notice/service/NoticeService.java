@@ -92,7 +92,7 @@ public class NoticeService {
                 .id(notice.getId())
                 .type(PostType.NOTICE)
                 .title(notice.getTitle())
-                .author("관리자") // 공지사항 작성자는 '관리자'로 고정
+                .author("admin") // 공지사항 작성자는 '관리자'로 고정
                 .createdAt(notice.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                 .viewCount(null) // 공지사항은 조회수 필드가 없으므로 null
                 .build();
