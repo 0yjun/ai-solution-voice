@@ -34,6 +34,7 @@ public class FileStorageService {
     public Resource loadAudioByPath(String filePath) {
         try {
             Path fullPath = Paths.get(this.baseStoragePath).resolve(filePath).normalize();
+            //Path fullPath = Paths.get(filePath).normalize();
             Resource resource = new UrlResource(fullPath.toUri());
 
             if (resource.exists() && resource.isReadable()) {

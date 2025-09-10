@@ -37,4 +37,4 @@ spring:
 
 file:
   storage:
-    base-path: C:\project2\hotword\ai-solution-voice
+    base-path: voice

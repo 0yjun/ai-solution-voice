@@ -172,18 +172,35 @@ public class PostService {
             throw new CustomException(ErrorCode.AUTH_ACCESS_FORBIDDEN);
         }
 
+        String loginId = post.getMember().getLoginId();
+
         List<VoiceData> voiceDataList = post.getVoiceDataList();
 
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
              ZipOutputStream zos = new ZipOutputStream(baos)) {
 
             for (VoiceData voiceData : voiceDataList) {
-                Path filePath = Paths.get(voiceData.getAudioFilePath());
+                String storedPath = voiceData.getAudioFilePath();
+                log.info("Stored audioFilePath from DB: {}", storedPath);
+
+                String correctedPath = storedPath;
+                // Check if the path starts with "/app/voice/voice/" and correct it
+                correctedPath = "/app/voice/voice" + storedPath.substring("/app/voice/voice/".length());
+                Path filePath = Paths.get(correctedPath);
+
                 if (Files.exists(filePath)) {
-                    ZipEntry zipEntry = new ZipEntry(filePath.getFileName().toString());
-                    zos.putNextEntry(zipEntry);
-                    Files.copy(filePath, zos);
-                    zos.closeEntry();
+                    log.info("File exists at: {}", filePath);
+                    if (Files.isReadable(filePath)) {
+                        log.info("File is readable at: {}", filePath);
+                        ZipEntry zipEntry = new ZipEntry(loginId + "_" + voiceData.getId() + ".wav");
+                        zos.putNextEntry(zipEntry);
+                        Files.copy(filePath, zos);
+                        zos.closeEntry();
+                    } else {
+                        log.warn("File exists but is NOT readable at: {}", filePath);
+                    }
+                } else {
+                    log.warn("File does NOT exist at: {}", filePath);
                 }
             }
             zos.finish();

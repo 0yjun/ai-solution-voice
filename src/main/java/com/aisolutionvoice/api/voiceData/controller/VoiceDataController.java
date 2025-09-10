@@ -4,6 +4,7 @@ import com.aisolutionvoice.api.voiceData.service.VoiceDataService;
 import com.aisolutionvoice.common.file.FileStorageService;
 import com.aisolutionvoice.exception.CustomException;
 import com.aisolutionvoice.exception.ErrorCode;
+import com.aisolutionvoice.security.model.CustomMemberDetails;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -11,6 +12,7 @@ import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,9 +29,13 @@ public class VoiceDataController {
     private final VoiceDataService voiceDataService;
 
     @GetMapping("/{voiceDataId}")
-    public ResponseEntity<?> streamVoiceData(@PathVariable Long voiceDataId) {
+    public ResponseEntity<?> streamVoiceData(
+            @PathVariable Long voiceDataId,
+            @AuthenticationPrincipal CustomMemberDetails customMemberDetails
+    ) {
         Resource audio = voiceDataService.getAudioResourceById(voiceDataId);
-        String filename = voiceDataId + ".wav"; // DB에서 가져오거나 규칙으로 생성
+        String loginId = customMemberDetails.getLoginId();
+        String filename = loginId + "_" + voiceDataId + ".wav";
 
         try {
             return ResponseEntity.ok()
