@@ -6,7 +6,9 @@ import com.aisolutionvoice.security.model.CustomMemberDetails;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -110,5 +112,22 @@ public class PostController {
         log.info(String.valueOf(isChecked));
         boolean isCheckedRes = postService.setChecked(postId, isChecked);
         return ResponseEntity.ok(Map.of("isChecked", isCheckedRes));
+    }
+
+    @GetMapping("/{postId}/voice-data/download")
+    public ResponseEntity<Resource> downloadVoiceData(
+            @PathVariable Long boardId,
+            @PathVariable Long postId,
+            @AuthenticationPrincipal CustomMemberDetails customMemberDetails
+    ) {
+        Integer memberId = customMemberDetails.getUserId();
+        Resource resource = postService.downloadVoiceDataAsZip(postId, memberId);
+
+        String filename = "voicedata_" + postId + ".zip";
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
     }
 }

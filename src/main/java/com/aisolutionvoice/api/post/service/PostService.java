@@ -8,22 +8,32 @@ import com.aisolutionvoice.api.notice.service.NoticeService;
 import com.aisolutionvoice.api.post.dto.*;
 import com.aisolutionvoice.api.post.entity.Post;
 import com.aisolutionvoice.api.post.repository.PostRepository;
+import com.aisolutionvoice.api.voiceData.entity.VoiceData;
 import com.aisolutionvoice.api.voiceData.service.VoiceDataService;
 import com.aisolutionvoice.exception.CustomException;
 import com.aisolutionvoice.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Service
 @RequiredArgsConstructor
@@ -151,5 +161,36 @@ public class PostService {
                 .orElseThrow(()->new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
         updatePost.setChecked(checked);
         return updatePost.isChecked();
+    }
+
+    @Transactional(readOnly = true)
+    public Resource downloadVoiceDataAsZip(Long postId, Integer memberId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND));
+
+        if (!post.getMember().getMemberId().equals(memberId)) {
+            throw new CustomException(ErrorCode.AUTH_ACCESS_FORBIDDEN);
+        }
+
+        List<VoiceData> voiceDataList = post.getVoiceDataList();
+
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
+             ZipOutputStream zos = new ZipOutputStream(baos)) {
+
+            for (VoiceData voiceData : voiceDataList) {
+                Path filePath = Paths.get(voiceData.getAudioFilePath());
+                if (Files.exists(filePath)) {
+                    ZipEntry zipEntry = new ZipEntry(filePath.getFileName().toString());
+                    zos.putNextEntry(zipEntry);
+                    Files.copy(filePath, zos);
+                    zos.closeEntry();
+                }
+            }
+            zos.finish();
+            return new ByteArrayResource(baos.toByteArray());
+        } catch (Exception e) {
+            log.error("Error creating zip file for post {}", postId, e);
+            throw new CustomException(ErrorCode.INTERNAL_COMMON_ERROR);
+        }
     }
 }
